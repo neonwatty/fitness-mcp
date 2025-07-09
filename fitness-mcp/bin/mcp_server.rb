@@ -11,10 +11,12 @@ server = MCP::Server.new(
   logger: MCP::Logger.new
 )
 
-# Register tools
+# Register tools with enhanced API key support
+# Note: These tools now support dynamic API key injection via constructor
 server.register_tool(LogSetTool)
 server.register_tool(GetLastSetTool)
 server.register_tool(GetLastSetsTool)
+server.register_tool(GetRecentSetsTool)
 server.register_tool(DeleteLastSetTool)
 server.register_tool(AssignWorkoutTool)
 

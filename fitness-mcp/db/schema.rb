@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_09_180421) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_09_185606) do
   create_table "api_keys", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "name"
@@ -20,6 +20,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_180421) do
     t.datetime "updated_at", null: false
     t.text "api_key_value"
     t.index ["user_id"], name: "index_api_keys_on_user_id"
+  end
+
+  create_table "mcp_audit_logs", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "api_key_id", null: false
+    t.string "tool_name"
+    t.text "arguments"
+    t.boolean "result_success"
+    t.string "ip_address"
+    t.datetime "timestamp"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key_id", "timestamp"], name: "index_mcp_audit_logs_on_api_key_id_and_timestamp"
+    t.index ["api_key_id"], name: "index_mcp_audit_logs_on_api_key_id"
+    t.index ["timestamp"], name: "index_mcp_audit_logs_on_timestamp"
+    t.index ["user_id", "timestamp"], name: "index_mcp_audit_logs_on_user_id_and_timestamp"
+    t.index ["user_id"], name: "index_mcp_audit_logs_on_user_id"
   end
 
   create_table "set_entries", force: :cascade do |t|
@@ -51,6 +68,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_180421) do
   end
 
   add_foreign_key "api_keys", "users"
+  add_foreign_key "mcp_audit_logs", "api_keys"
+  add_foreign_key "mcp_audit_logs", "users"
   add_foreign_key "set_entries", "users"
   add_foreign_key "workout_assignments", "users"
 end

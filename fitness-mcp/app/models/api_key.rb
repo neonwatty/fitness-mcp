@@ -1,5 +1,6 @@
 class ApiKey < ApplicationRecord
   belongs_to :user
+  has_many :mcp_audit_logs, dependent: :destroy
   
   validates :name, presence: true
   validates :api_key_hash, presence: true, uniqueness: true

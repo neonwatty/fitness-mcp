@@ -4,10 +4,7 @@ class GetLastSetToolTest < ActiveSupport::TestCase
   def setup
     @user = create_user
     @api_key_record, @api_key = create_api_key(user: @user)
-    @tool = GetLastSetTool.new
-    
-    # Mock the API key for the tool
-    @tool.instance_variable_set(:@api_key, @api_key)
+    @tool = GetLastSetTool.new(api_key: @api_key)
   end
 
   test "should get last set for specific exercise" do
@@ -65,18 +62,18 @@ class GetLastSetToolTest < ActiveSupport::TestCase
   end
 
   test "should require authentication" do
-    @tool.instance_variable_set(:@api_key, nil)
+    unauthenticated_tool = GetLastSetTool.new(api_key: nil)
     
     assert_raises StandardError, "Authentication required. Please provide a valid API key." do
-      @tool.call(exercise: "Bench Press")
+      unauthenticated_tool.call(exercise: "Bench Press")
     end
   end
 
   test "should require valid API key" do
-    @tool.instance_variable_set(:@api_key, "invalid_key")
+    invalid_tool = GetLastSetTool.new(api_key: "invalid_key")
     
     assert_raises StandardError, "Authentication required. Please provide a valid API key." do
-      @tool.call(exercise: "Bench Press")
+      invalid_tool.call(exercise: "Bench Press")
     end
   end
 
