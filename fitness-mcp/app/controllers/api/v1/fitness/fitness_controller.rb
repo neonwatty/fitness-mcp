@@ -107,7 +107,10 @@ class Api::V1::Fitness::FitnessController < Api::V1::BaseController
   end
   
   def get_last_set
-    @set = @current_user.set_entries.recent.limit(1).first
+    return render json: { success: false, message: "Exercise is required" }, status: :bad_request unless params[:exercise].present?
+    
+    normalized_exercise = params[:exercise].strip.downcase
+    @set = @current_user.set_entries.where("LOWER(exercise) = ?", normalized_exercise).recent.limit(1).first
     
     if @set
       render json: {
@@ -129,8 +132,11 @@ class Api::V1::Fitness::FitnessController < Api::V1::BaseController
   end
   
   def get_last_sets
+    return render json: { success: false, message: "Exercise is required" }, status: :bad_request unless params[:exercise].present?
+    
     limit = params[:limit] || 10
-    @sets = @current_user.set_entries.recent.limit(limit.to_i)
+    normalized_exercise = params[:exercise].strip.downcase
+    @sets = @current_user.set_entries.where("LOWER(exercise) = ?", normalized_exercise).recent.limit(limit.to_i)
     
     render json: {
       success: true,

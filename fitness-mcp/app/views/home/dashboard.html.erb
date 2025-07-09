@@ -261,7 +261,7 @@
       return;
     }
 
-    makeApiCall('/api/v1/log_set', 'POST', { exercise, weight, reps });
+    makeApiCall('/api/v1/fitness/log_set', 'POST', { exercise, weight, reps });
   }
 
   function getLastSet() {
@@ -271,7 +271,7 @@
       return;
     }
 
-    makeApiCall(`/api/v1/get_last_set?exercise=${encodeURIComponent(exercise)}`);
+    makeApiCall(`/api/v1/fitness/get_last_set?exercise=${encodeURIComponent(exercise)}`);
   }
 
   function getLastSets() {
@@ -283,6 +283,6 @@
       return;
     }
 
-    makeApiCall(`/api/v1/get_last_sets?exercise=${encodeURIComponent(exercise)}&limit=${limit}`);
+    makeApiCall(`/api/v1/fitness/get_last_sets?exercise=${encodeURIComponent(exercise)}&limit=${limit}`);
   }
 </script>

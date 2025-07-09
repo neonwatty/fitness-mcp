@@ -19,11 +19,19 @@ puts "Password: password123"
 
 # Create an API key for the test user
 if test_user.persisted?
-  api_key = test_user.api_keys.find_or_create_by(name: 'Development API Key') do |key|
-    key.api_key_hash = BCrypt::Password.create(SecureRandom.hex(32))
-  end
+  # Delete existing API key to create a fresh one
+  test_user.api_keys.where(name: 'Development API Key').destroy_all
   
-  if api_key.persisted?
-    puts "API key created: #{api_key.name}"
-  end
+  # Generate a new API key
+  api_key_value = ApiKey.generate_key
+  key_hash = ApiKey.hash_key(api_key_value)
+  
+  api_key = test_user.api_keys.create!(
+    name: 'Development API Key',
+    api_key_hash: key_hash
+  )
+  
+  puts "API key created: #{api_key.name}"
+  puts "API key value: #{api_key_value}"
+  puts "COPY THIS API KEY: #{api_key_value}"
 end
