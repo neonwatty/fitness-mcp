@@ -9,9 +9,11 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # User registration and authentication
-      post '/users', to: 'users#create'
-      post '/sessions', to: 'sessions#create'
-      delete '/sessions', to: 'sessions#destroy'
+      namespace :auth do
+        post '/register', to: 'users#create'
+        post '/login', to: 'sessions#create'
+        delete '/logout', to: 'sessions#destroy'
+      end
       
       # API key management
       resources :api_keys, only: [:index, :create, :destroy] do
@@ -21,11 +23,16 @@ Rails.application.routes.draw do
       end
       
       # Fitness tracking endpoints
-      post '/log_set', to: 'fitness#log_set'
-      get '/get_last_set', to: 'fitness#get_last_set'
-      get '/get_last_sets', to: 'fitness#get_last_sets'
-      delete '/delete_last_set', to: 'fitness#delete_last_set'
-      post '/assign_workout', to: 'fitness#assign_workout'
+      namespace :fitness do
+        post '/log_set', to: 'fitness#log_set'
+        get '/history', to: 'fitness#history'
+        post '/create_plan', to: 'fitness#create_plan'
+        get '/plans', to: 'fitness#plans'
+        get '/get_last_set', to: 'fitness#get_last_set'
+        get '/get_last_sets', to: 'fitness#get_last_sets'
+        delete '/delete_last_set', to: 'fitness#delete_last_set'
+        post '/assign_workout', to: 'fitness#assign_workout'
+      end
       
       # Additional endpoints for manual usage
       resources :set_entries, only: [:index, :show, :create, :update, :destroy]

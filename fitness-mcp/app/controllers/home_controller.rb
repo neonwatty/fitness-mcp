@@ -4,7 +4,11 @@ class HomeController < ApplicationController
   end
   
   def dashboard
-    redirect_to login_path unless session[:user_id]
+    unless session[:user_id]
+      redirect_to login_path, alert: 'Please log in first'
+      return
+    end
+    
     @user = User.find(session[:user_id])
     @api_keys = @user.api_keys.active
     @recent_sets = @user.set_entries.recent.limit(5)

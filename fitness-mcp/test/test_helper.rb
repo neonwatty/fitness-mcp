@@ -10,6 +10,55 @@ module ActiveSupport
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
 
-    # Add more helper methods to be used by all tests here...
+    # Helper methods for tests
+    def create_user(email: 'test@example.com', password: 'password123')
+      User.create!(
+        email: email,
+        password: password,
+        password_confirmation: password
+      )
+    end
+
+    def create_api_key(user:, name: 'Test API Key')
+      key = ApiKey.generate_key
+      key_hash = ApiKey.hash_key(key)
+      api_key_record = user.api_keys.create!(
+        name: name,
+        api_key_hash: key_hash
+      )
+      [api_key_record, key]
+    end
+
+    def api_headers(api_key)
+      { 'Authorization' => "Bearer #{api_key}" }
+    end
+  end
+end
+
+module ActionDispatch
+  class IntegrationTest
+    include ActiveSupport::TestCase::InstanceMethods if defined?(ActiveSupport::TestCase::InstanceMethods)
+    
+    def create_user(email: 'test@example.com', password: 'password123')
+      User.create!(
+        email: email,
+        password: password,
+        password_confirmation: password
+      )
+    end
+
+    def create_api_key(user:, name: 'Test API Key')
+      key = ApiKey.generate_key
+      key_hash = ApiKey.hash_key(key)
+      api_key_record = user.api_keys.create!(
+        name: name,
+        api_key_hash: key_hash
+      )
+      [api_key_record, key]
+    end
+
+    def api_headers(api_key)
+      { 'Authorization' => "Bearer #{api_key}" }
+    end
   end
 end

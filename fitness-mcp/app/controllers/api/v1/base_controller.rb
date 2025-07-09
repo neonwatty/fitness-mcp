@@ -16,12 +16,19 @@ class Api::V1::BaseController < ApplicationController
     @current_user ||= @api_key_record&.user
   end
   
+  def set_current_user
+    @current_user = current_user
+  end
+  
   def api_key_header
     @api_key_header ||= request.headers['Authorization']&.gsub(/^Bearer\s+/, '')
   end
   
   def render_unauthorized
-    render json: { error: 'Unauthorized. Please provide a valid API key in Authorization header.' }, status: :unauthorized
+    render json: { 
+      success: false, 
+      message: 'Missing or invalid API key' 
+    }, status: :unauthorized
   end
   
   def render_error(message, status = :unprocessable_entity)
