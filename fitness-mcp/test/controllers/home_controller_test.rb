@@ -20,10 +20,9 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     
     get "/dashboard"
     assert_response :success
-    assert_select "h1", text: "Dashboard"
-    assert_select "form[data-target='log-set']"
-    assert_select "form[data-target='get-history']"
-    assert_select "form[data-target='create-plan']"
+    assert_select "h1", text: "Welcome, test@example.com"
+    assert_select "h2", text: "API Keys"
+    assert_select "h2", text: "API Testing Interface"
   end
 
   test "should redirect to login when accessing dashboard without login" do
@@ -46,18 +45,17 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     
     # Check for API testing sections
-    assert_select "h3", text: "Log a Set"
-    assert_select "h3", text: "Get Workout History"
-    assert_select "h3", text: "Create Workout Plan"
-    assert_select "h3", text: "API Key Management"
+    assert_select "h3", text: "Quick Actions"
+    assert_select "h4", text: "Log Workout Set"
+    assert_select "h4", text: "Get Last Set"
+    assert_select "h4", text: "Get Last N Sets"
+    assert_select "h3", text: "API Response"
     
     # Check for form inputs
-    assert_select "input[name='exercise']"
-    assert_select "input[name='weight']"
-    assert_select "input[name='reps']"
-    assert_select "input[name='limit']"
-    assert_select "input[name='assignment_name']"
-    assert_select "input[name='scheduled_for']"
-    assert_select "input[name='api_key_name']"
+    assert_select "input[id='exercise']"
+    assert_select "input[id='weight']"
+    assert_select "input[id='reps']"
+    assert_select "input[id='sets-limit']"
+    assert_select "input[id='api-key-input']"
   end
 end

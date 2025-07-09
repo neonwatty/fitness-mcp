@@ -19,7 +19,7 @@ class LogSetToolTest < ActiveSupport::TestCase
     
     assert result[:success]
     assert_equal "Successfully logged 10 reps of Bench Press at 135.0 lbs", result[:message]
-    assert_present result[:set_entry]
+    assert_not_nil result[:set_entry]
     assert_equal "bench press", result[:set_entry][:exercise]
     assert_equal 135.0, result[:set_entry][:weight]
     assert_equal 10, result[:set_entry][:reps]

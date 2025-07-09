@@ -49,6 +49,13 @@ Rails.application.routes.draw do
   delete "/logout", to: "web_sessions#destroy"
   get "/dashboard", to: "home#dashboard"
   
+  # Web API key management
+  resources :api_keys, only: [:create, :destroy] do
+    member do
+      patch :revoke
+    end
+  end
+  
   # API info endpoint
   get "/api_info", to: "application#info"
 end

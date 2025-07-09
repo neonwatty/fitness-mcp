@@ -35,7 +35,7 @@ class GetLastSetToolTest < ActiveSupport::TestCase
     
     assert result[:success]
     assert_includes result[:message], "Last Bench Press: 8 reps at 140.0 lbs"
-    assert_present result[:set_entry]
+    assert_not_nil result[:set_entry]
     assert_equal last_set.id, result[:set_entry][:id]
     assert_equal "bench press", result[:set_entry][:exercise]
     assert_equal 140.0, result[:set_entry][:weight]
@@ -61,7 +61,7 @@ class GetLastSetToolTest < ActiveSupport::TestCase
     result = @tool.call(exercise: "  BENCH PRESS  ")
     
     assert result[:success]
-    assert_present result[:set_entry]
+    assert_not_nil result[:set_entry]
   end
 
   test "should require authentication" do

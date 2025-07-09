@@ -177,19 +177,21 @@
     if (!name) return;
 
     try {
-      const response = await fetch('/api/v1/api_keys', {
+      const response = await fetch('/api_keys', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${document.getElementById('api-key-input').value || 'temp'}`
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({ api_key: { name: name } })
       });
       
-      if (response.ok) {
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
         location.reload();
       } else {
-        alert('Failed to create API key. Make sure you have a valid API key.');
+        alert(`Failed to create API key: ${result.message || 'Unknown error'}`);
       }
     } catch (error) {
       alert('Error creating API key: ' + error.message);
@@ -200,17 +202,19 @@
     if (!confirm('Are you sure you want to revoke this API key?')) return;
 
     try {
-      const response = await fetch(`/api/v1/api_keys/${id}/revoke`, {
+      const response = await fetch(`/api_keys/${id}/revoke`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${document.getElementById('api-key-input').value}`
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
       });
       
-      if (response.ok) {
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
         location.reload();
       } else {
-        alert('Failed to revoke API key.');
+        alert(`Failed to revoke API key: ${result.message || 'Unknown error'}`);
       }
     } catch (error) {
       alert('Error revoking API key: ' + error.message);
