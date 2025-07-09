@@ -152,6 +152,24 @@ class Api::V1::Fitness::FitnessController < Api::V1::BaseController
     }
   end
   
+  def get_recent_sets
+    limit = params[:limit] || 10
+    @sets = @current_user.set_entries.recent.limit(limit.to_i)
+    
+    render json: {
+      success: true,
+      sets: @sets.map do |set|
+        {
+          id: set.id,
+          exercise: set.exercise,
+          weight: set.weight,
+          reps: set.reps,
+          timestamp: set.timestamp
+        }
+      end
+    }
+  end
+  
   def delete_last_set
     @set = @current_user.set_entries.recent.limit(1).first
     

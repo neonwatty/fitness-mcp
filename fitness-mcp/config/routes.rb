@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         get '/plans', to: 'fitness#plans'
         get '/get_last_set', to: 'fitness#get_last_set'
         get '/get_last_sets', to: 'fitness#get_last_sets'
+        get '/get_recent_sets', to: 'fitness#get_recent_sets'
         delete '/delete_last_set', to: 'fitness#delete_last_set'
         post '/assign_workout', to: 'fitness#assign_workout'
       end

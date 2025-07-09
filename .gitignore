@@ -1,4 +1,5 @@
 # Byte-compiled / optimized / DLL files
+cookies.txt
 fitness-mcp/storage/*
 fitness-mcp/tmp/*
 *.sqlite3

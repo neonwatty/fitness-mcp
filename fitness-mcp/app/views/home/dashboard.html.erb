@@ -18,11 +18,36 @@
         <div class="space-y-2">
           <% @api_keys.each do |api_key| %>
             <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
-              <div>
+              <div class="flex-1">
                 <span class="font-medium"><%= api_key.name %></span>
-                <span class="text-sm text-gray-500">Created: <%= api_key.created_at.strftime('%Y-%m-%d') %></span>
+                <span class="text-sm text-gray-500 block">Created: <%= api_key.created_at.strftime('%Y-%m-%d') %></span>
+                <div class="mt-2 flex items-center gap-2">
+                  <input type="text" id="api-key-<%= api_key.id %>" 
+                         value="<%= api_key.api_key_value || '[Key not available - created before this feature]' %>" 
+                         class="font-mono text-sm bg-white border border-gray-300 rounded px-2 py-1 flex-1"
+                         readonly 
+                         style="letter-spacing: 0.05em;"
+                         <% if api_key.api_key_value.nil? %>disabled<% end %>>
+                  <button onclick="toggleApiKeyVisibility(<%= api_key.id %>)" 
+                          class="text-gray-500 hover:text-gray-700 p-1 rounded"
+                          <% if api_key.api_key_value.nil? %>disabled title="Key not available"<% end %>>
+                    <svg id="eye-icon-<%= api_key.id %>" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                  <button onclick="copyApiKey(<%= api_key.id %>)" 
+                          class="text-gray-500 hover:text-gray-700 p-1 rounded"
+                          title="Copy to clipboard"
+                          <% if api_key.api_key_value.nil? %>disabled<% end %>>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                  </button>
+                </div>
               </div>
-              <button onclick="revokeApiKey(<%= api_key.id %>)" class="text-red-600 hover:text-red-800 text-sm">
+              <button onclick="revokeApiKey(<%= api_key.id %>)" class="text-red-600 hover:text-red-800 text-sm ml-4">
                 Revoke
               </button>
             </div>
@@ -84,6 +109,17 @@
               <input type="number" id="sets-limit" placeholder="Limit" value="5" class="w-16 px-2 py-1 border rounded text-sm">
               <button onclick="getLastSets()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
                 Get Sets
+              </button>
+            </div>
+          </div>
+
+          <!-- Get Recent Sets (All Exercises) -->
+          <div class="border rounded-md p-3">
+            <h4 class="font-medium mb-2">Get Recent Sets (All Exercises)</h4>
+            <div class="flex gap-2">
+              <input type="number" id="recent-sets-limit" placeholder="Limit" value="10" class="w-16 px-2 py-1 border rounded text-sm">
+              <button onclick="getRecentSets()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm" style="background-color: #7c3aed !important; color: white !important; display: block !important; visibility: visible !important; opacity: 1 !important;">
+                Get Recent Sets
               </button>
             </div>
           </div>
@@ -196,17 +232,39 @@
         document.getElementById('api-key-input').value = apiKey;
         
         // Show alert with the key value
-        alert(`API Key created successfully!\n\nName: ${result.api_key.name}\nAPI Key: ${apiKey}\n\nThe key has been automatically filled in the testing interface below. Copy it now as it won't be shown again.`);
+        alert(`API Key created successfully!\n\nName: ${result.api_key.name}\nAPI Key: ${apiKey}\n\nThe key has been automatically filled in the testing interface below and is now available in your API keys list with show/hide functionality.`);
         
         // Add the new API key to the list without reloading
         const apiKeysList = document.getElementById('api-keys-list');
         const newKeyHtml = `
           <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
-            <div>
+            <div class="flex-1">
               <span class="font-medium">${result.api_key.name}</span>
-              <span class="text-sm text-gray-500">Created: ${new Date(result.api_key.created_at).toISOString().split('T')[0]}</span>
+              <span class="text-sm text-gray-500 block">Created: ${new Date(result.api_key.created_at).toISOString().split('T')[0]}</span>
+              <div class="mt-2 flex items-center gap-2">
+                <input type="password" id="api-key-${result.api_key.id}" 
+                       value="${apiKey}" 
+                       class="font-mono text-sm bg-white border border-gray-300 rounded px-2 py-1 flex-1"
+                       readonly 
+                       style="letter-spacing: 0.05em;">
+                <button onclick="toggleApiKeyVisibility(${result.api_key.id})" 
+                        class="text-gray-500 hover:text-gray-700 p-1 rounded">
+                  <svg id="eye-icon-${result.api_key.id}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                </button>
+                <button onclick="copyApiKey(${result.api_key.id})" 
+                        class="text-gray-500 hover:text-gray-700 p-1 rounded"
+                        title="Copy to clipboard">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
             </div>
-            <button onclick="revokeApiKey(${result.api_key.id})" class="text-red-600 hover:text-red-800 text-sm">
+            <button onclick="revokeApiKey(${result.api_key.id})" class="text-red-600 hover:text-red-800 text-sm ml-4">
               Revoke
             </button>
           </div>
@@ -285,4 +343,82 @@
 
     makeApiCall(`/api/v1/fitness/get_last_sets?exercise=${encodeURIComponent(exercise)}&limit=${limit}`);
   }
+
+  function getRecentSets() {
+    const limit = document.getElementById('recent-sets-limit').value;
+    makeApiCall(`/api/v1/fitness/get_recent_sets?limit=${limit}`);
+  }
+
+  function toggleApiKeyVisibility(keyId) {
+    const input = document.getElementById(`api-key-${keyId}`);
+    const eyeIcon = document.getElementById(`eye-icon-${keyId}`);
+    
+    // Don't toggle if input is disabled
+    if (input.disabled) return;
+    
+    if (input.type === 'password') {
+      // Show the key
+      input.type = 'text';
+      eyeIcon.innerHTML = `
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      `;
+    } else {
+      // Hide the key
+      input.type = 'password';
+      eyeIcon.innerHTML = `
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+      `;
+    }
+  }
+
+  function copyApiKey(keyId) {
+    const input = document.getElementById(`api-key-${keyId}`);
+    
+    // Don't copy if input is disabled
+    if (input.disabled) return;
+    
+    // Temporarily show the key if it's hidden
+    const wasHidden = input.type === 'password';
+    if (wasHidden) {
+      input.type = 'text';
+    }
+    
+    // Copy to clipboard
+    input.select();
+    input.setSelectionRange(0, 99999); // For mobile devices
+    
+    try {
+      document.execCommand('copy');
+      // Show success feedback
+      const button = event.target.closest('button');
+      const originalTitle = button.title;
+      button.title = 'Copied!';
+      setTimeout(() => {
+        button.title = originalTitle;
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+    
+    // Hide the key again if it was previously hidden
+    if (wasHidden) {
+      input.type = 'password';
+    }
+    
+    // Remove selection
+    input.blur();
+  }
+
+  // Initialize all API keys as hidden on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const apiKeyInputs = document.querySelectorAll('[id^="api-key-"]');
+    apiKeyInputs.forEach(input => {
+      // Only set to password type if not disabled
+      if (!input.disabled) {
+        input.type = 'password';
+      }
+    });
+  });
 </script>

@@ -7,7 +7,8 @@ class ApiKeysController < ApplicationController
     
     api_key_record = current_user.api_keys.build(
       name: api_key_params[:name],
-      api_key_hash: key_hash
+      api_key_hash: key_hash,
+      api_key_value: api_key
     )
     
     if api_key_record.save

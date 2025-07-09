@@ -28,7 +28,8 @@ if test_user.persisted?
   
   api_key = test_user.api_keys.create!(
     name: 'Development API Key',
-    api_key_hash: key_hash
+    api_key_hash: key_hash,
+    api_key_value: api_key_value
   )
   
   puts "API key created: #{api_key.name}"

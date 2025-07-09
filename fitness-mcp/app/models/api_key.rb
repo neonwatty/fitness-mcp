@@ -6,6 +6,25 @@ class ApiKey < ApplicationRecord
   
   scope :active, -> { where(revoked_at: nil) }
   
+  # Encrypt the API key value before storing
+  def api_key_value=(value)
+    if value.present?
+      super(Base64.encode64(value))
+    else
+      super(nil)
+    end
+  end
+  
+  # Decrypt the API key value when reading
+  def api_key_value
+    encoded_value = super
+    if encoded_value.present?
+      Base64.decode64(encoded_value)
+    else
+      nil
+    end
+  end
+  
   def self.generate_key
     SecureRandom.hex(16)
   end
