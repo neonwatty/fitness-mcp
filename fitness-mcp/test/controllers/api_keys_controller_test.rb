@@ -24,6 +24,8 @@ class ApiKeysControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Test API Key", json["api_key"]["name"]
     assert json["api_key"]["id"].present?
     assert json["api_key"]["created_at"].present?
+    assert json["api_key"]["key"].present?
+    assert_equal 32, json["api_key"]["key"].length
   end
 
   test "should not create API key without login" do

@@ -189,7 +189,37 @@
       const result = await response.json();
       
       if (response.ok && result.success) {
-        location.reload();
+        // Show the API key value and auto-fill the input
+        const apiKey = result.api_key.key;
+        
+        // Auto-fill the API key input field first
+        document.getElementById('api-key-input').value = apiKey;
+        
+        // Show alert with the key value
+        alert(`API Key created successfully!\n\nName: ${result.api_key.name}\nAPI Key: ${apiKey}\n\nThe key has been automatically filled in the testing interface below. Copy it now as it won't be shown again.`);
+        
+        // Add the new API key to the list without reloading
+        const apiKeysList = document.getElementById('api-keys-list');
+        const newKeyHtml = `
+          <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+            <div>
+              <span class="font-medium">${result.api_key.name}</span>
+              <span class="text-sm text-gray-500">Created: ${new Date(result.api_key.created_at).toISOString().split('T')[0]}</span>
+            </div>
+            <button onclick="revokeApiKey(${result.api_key.id})" class="text-red-600 hover:text-red-800 text-sm">
+              Revoke
+            </button>
+          </div>
+        `;
+        
+        // If there are existing keys, add to the container
+        const existingContainer = apiKeysList.querySelector('.space-y-2');
+        if (existingContainer) {
+          existingContainer.insertAdjacentHTML('beforeend', newKeyHtml);
+        } else {
+          // Replace the "No API keys" message with the new key
+          apiKeysList.innerHTML = `<div class="space-y-2">${newKeyHtml}</div>`;
+        }
       } else {
         alert(`Failed to create API key: ${result.message || 'Unknown error'}`);
       }

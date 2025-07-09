@@ -17,6 +17,7 @@ class ApiKeysController < ApplicationController
         api_key: {
           id: api_key_record.id,
           name: api_key_record.name,
+          key: api_key,
           created_at: api_key_record.created_at
         }
       }
