@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
   def info
     render json: {
       name: 'Fitness MCP Server',

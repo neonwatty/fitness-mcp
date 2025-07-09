@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
   def index
     # Show API info and links to registration/login
+    render :index
   end
   
   def dashboard
@@ -13,5 +14,6 @@ class HomeController < ApplicationController
     @api_keys = @user.api_keys.active
     @recent_sets = @user.set_entries.recent.limit(5)
     @workout_assignments = @user.workout_assignments.order(created_at: :desc).limit(3)
+    render :dashboard
   end
 end

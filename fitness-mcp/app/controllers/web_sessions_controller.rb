@@ -1,6 +1,7 @@
 class WebSessionsController < ApplicationController
   def new
     # Login form
+    render :new
   end
   
   def create
