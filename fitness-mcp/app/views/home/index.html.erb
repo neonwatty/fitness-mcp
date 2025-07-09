@@ -1,0 +1,78 @@
+<div class="text-center">
+  <h1 class="text-4xl font-bold text-gray-900 mb-8">Fitness MCP Server</h1>
+  <p class="text-xl text-gray-600 mb-12">Personal fitness tracking and planning tool with MCP integration</p>
+  
+  <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+    <!-- Features -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-2xl font-semibold mb-4">Features</h2>
+      <ul class="text-left space-y-2">
+        <li class="flex items-center">
+          <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          Workout set logging
+        </li>
+        <li class="flex items-center">
+          <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          Exercise history tracking
+        </li>
+        <li class="flex items-center">
+          <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          Workout assignment planning
+        </li>
+        <li class="flex items-center">
+          <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          API key management
+        </li>
+        <li class="flex items-center">
+          <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          Model Context Protocol (MCP) integration
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Getting Started -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-2xl font-semibold mb-4">Getting Started</h2>
+      <div class="space-y-4">
+        <%= link_to register_path, class: "block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg text-center transition duration-200" do %>
+          Create Account
+        <% end %>
+        <%= link_to login_path, class: "block w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg text-center transition duration-200" do %>
+          Login
+        <% end %>
+        <%= link_to api_info_path, class: "block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg text-center transition duration-200" do %>
+          View API Documentation
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-12 max-w-4xl mx-auto">
+    <h2 class="text-2xl font-semibold mb-6">API Integration</h2>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <p class="text-gray-600 mb-4">This server provides both REST API endpoints and Model Context Protocol (MCP) integration:</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-semibold mb-2">REST API</h3>
+          <p class="text-sm text-gray-600">Use standard HTTP requests with API key authentication for manual usage or app integration.</p>
+          <code class="text-xs bg-gray-100 p-2 rounded mt-2 block">Base URL: /api/v1</code>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">MCP Server</h3>
+          <p class="text-sm text-gray-600">Connect LLMs and AI agents directly to fitness tracking tools via Model Context Protocol.</p>
+          <code class="text-xs bg-gray-100 p-2 rounded mt-2 block">ruby bin/mcp_server.rb stdio</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

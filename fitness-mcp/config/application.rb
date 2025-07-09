@@ -27,7 +27,15 @@ module FitnessMcp
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
-    config.api_only = true
+    # config.api_only = true # Commented out to enable views
+    
+    # Add back middleware for web interface
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
+    config.middleware.use ActionDispatch::Flash
+    
+    # Enable asset pipeline
+    config.assets.enabled = true
     
     # Auto-load tool classes
     config.autoload_paths += %W[#{config.root}/app/tools]

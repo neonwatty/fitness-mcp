@@ -33,6 +33,15 @@ Rails.application.routes.draw do
     end
   end
 
-  # Defines the root path route ("/")
-  root "application#info"
+  # Web interface routes
+  root "home#index"
+  get "/register", to: "web_users#new"
+  post "/register", to: "web_users#create"
+  get "/login", to: "web_sessions#new"
+  post "/login", to: "web_sessions#create"
+  delete "/logout", to: "web_sessions#destroy"
+  get "/dashboard", to: "home#dashboard"
+  
+  # API info endpoint
+  get "/api_info", to: "application#info"
 end
