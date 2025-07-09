@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  name: MyString
+  api_key_hash: MyString
+  created_at: 2025-07-08 15:57:28
+  revoked_at: 2025-07-08 15:57:28
+
+two:
+  user: two
+  name: MyString
+  api_key_hash: MyString
+  created_at: 2025-07-08 15:57:28
+  revoked_at: 2025-07-08 15:57:28

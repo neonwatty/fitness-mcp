@@ -1,0 +1,9 @@
+class User < ApplicationRecord
+  has_secure_password
+  
+  has_many :api_keys, dependent: :destroy
+  has_many :set_entries, dependent: :destroy
+  has_many :workout_assignments, dependent: :destroy
+  
+  validates :email, presence: true, uniqueness: true
+end

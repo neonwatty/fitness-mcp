@@ -1,0 +1,184 @@
+# Product Requirements Document (PRD)
+
+## 1. Overview
+
+The **Fitness Model Context Protocol (MCP) server** is a personal fitness tracking and planning tool designed for integration with LLMs (e.g., ChatGPT, Claude) via natural language. It enables users to log, query, edit, and plan weightlifting workouts conversationally. The system exposes a structured API (MCP/OpenAPI-compatible) for easy LLM agent integration.
+
+### Target Users
+- Self-directed lifters who track progress
+- Coached athletes following structured plans
+- Casual lifters using voice-driven logs
+
+### Value Proposition
+- Track lifting progress over time
+- Plan and schedule workouts
+- Get smart suggestions based on history
+- Seamless LLM + mobile agent integration
+
+---
+
+## 2. Core Features
+
+### 2.1 Log a Set
+- **What it does:** Log a completed set (e.g., “12 reps of barbell squat at 135 lbs”)
+- **Why it's important:** Enables accurate workout tracking
+- **How it works:**  
+  `POST /log_set` (exercise, weight, reps, timestamp optional)
+
+### 2.2 Query Last Set
+- **What it does:** Retrieve the most recent set for a specific exercise
+- **Why it's important:** Supports in-session decision-making
+- **How it works:**  
+  `GET /get_last_set?exercise=...`
+
+### 2.3 Query Last N Sets
+- **What it does:** Retrieve the last N sets for a given exercise
+- **Why it's important:** Provides workout history context
+- **How it works:**  
+  `GET /get_last_sets?exercise=...&limit=3`  
+  Returns list of reps, weight, timestamp for N most recent sets
+
+### 2.4 Delete Last Set
+- **What it does:** Remove the last logged set for an exercise
+- **Why it's important:** Allows correction of errors
+- **How it works:**  
+  `DELETE /delete_last_set?exercise=...`
+
+### 2.5 Assign Workout
+- **What it does:** Enables planned workouts to be assigned
+- **Why it's important:** Supports structured training
+- **How it works:**  
+  `POST /assign_workout` (assignment name, set configs, optional schedule)
+
+### 2.6 Schedule Workouts
+- **What it does:** Associates workouts with specific times/dates
+- **Why it's important:** Enables planning + future calendar integration
+- **How it works:**  
+  `scheduled_for` datetime on workout assignments
+
+---
+
+## 3. User Experience
+
+### 3.1 Key User Flows
+- Voice-driven logs (LLM converts natural language → API calls)
+- Query history (“What were my last 3 deadlift sessions?”)
+- Plan workouts via LLM or client app
+- Mobile-first, LLM-optimized interactions
+
+### 3.2 UI/UX Considerations
+- API responses as human-readable summaries
+- Optimized for low-latency, mobile-first agents
+
+---
+
+## 4. Technical Architecture
+
+### 4.1 System Components
+- **Ruby on Rails 8**
+  - Handles all API endpoints and business logic, including MCP functionality
+  - User registration, login
+  - API key issuance, revocation
+  - Admin UI for key/user management (optional)
+- **MCP Implementation: fast-mcp gem**
+  - Ruby gem providing comprehensive MCP server implementation
+  - Tools API for exposing Ruby functions securely with validation
+  - Resources API for data sharing between app and AI models
+  - Multiple transports: STDIO, HTTP, or SSE
+  - Built-in Rails integration with generators
+  - Authentication support with bearer tokens
+  - Real-time updates and subscriptions
+- **API Keys**
+  - Issued by Rails, securely hashed in the database
+  - Used by clients/LLMs for MCP API auth
+- **Database: SQLite**
+  - Stores users, API keys, workout data
+
+### 4.2 Data Models
+- **User**
+  - `id`, `email`, `password_digest`
+- **APIKey**
+  - `id`, `user_id`, `name`, `api_key_hash`, `created_at`, `revoked_at`
+- **SetEntry**
+  - `id`, `user_id`, `exercise`, `reps`, `weight`, `timestamp`
+- **WorkoutAssignment**
+  - `id`, `user_id`, `assignment_name`, `scheduled_for`, config JSON
+
+### 4.3 MCP API Endpoints
+
+> **Note:** The user experience should also allow for manual usage of the MCP APIs. In addition to LLM or agent-driven interactions, users should be able to directly access and use these endpoints (e.g., via API clients, web forms, or command-line tools) for logging, querying, and planning workouts.
+
+- `POST /log_set` → Log a set  
+- `GET /get_last_set?exercise=...` → Get last set  
+- `GET /get_last_sets?exercise=...&limit=N` → Get last N sets  
+- `DELETE /delete_last_set?exercise=...` → Delete last set  
+- `POST /assign_workout` → Create workout plan  
+
+### 4.4 Infrastructure
+- Rails 8 app runs the full API and business logic
+- SQLite database for all app data (development and production)
+- All API endpoints are served directly by Rails (no AWS Lambda or API Gateway)
+- Optional: Deploy on EC2 or any standard Rails hosting platform
+
+---
+
+## 5. Development Roadmap
+
+### Phase 1: MVP
+- Rails app with user + API key management
+- Install and configure fast-mcp gem
+- Implement MCP tools for `log_set`, `get_last_set`, `get_last_sets`
+- SQLite schema for core models
+
+### Phase 2: Full CRUD + Planning
+- Add MCP tools for `delete_last_set`, `assign_workout`
+- Scheduling logic
+
+### Phase 3: Insights + Recommendations
+- PR tracking
+- Suggested next loads
+
+### Phase 4: Google Calendar Sync (optional)
+- OAuth flow
+- Create calendar events
+
+### Phase 5: Admin / Analytics UI
+- View API key usage
+- Reports on workouts, trends
+
+---
+
+## 6. Logical Dependency Chain
+1. SQLite schema + DB connection  
+2. Rails app + API key management  
+3. Install and configure fast-mcp gem
+4. Implement MCP tools for fitness endpoints
+5. Extend tools with planning + CRUD functionality
+6. Add insights, recommendations  
+7. Optional: Google Calendar sync  
+
+---
+
+## 7. Risks and Mitigations
+
+### Technical Risks
+- **API key validation latency:** Mitigate via indexed DB lookups or caching
+- **API key leak risk:** Provide easy revocation, encourage secure storage
+
+### Scope Risks
+- MVP creep: Focus first on logging/querying sets before insights/planning
+- Avoid premature UI focus — LLM API is primary surface
+
+### Security
+- API keys hashed in DB
+- All traffic over HTTPS
+- Rate limit API usage per key (future enhancement)
+
+---
+
+## 8. Appendix
+
+- OpenAPI spec defines MCP endpoints
+- Example LLM prompt: “Tell me about the last 3 times I deadlifted.”
+- Example API request header:
+
