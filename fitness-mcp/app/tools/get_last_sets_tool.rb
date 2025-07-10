@@ -6,8 +6,8 @@ class GetLastSetsTool < ApplicationTool
     optional(:limit).filled(:integer).description("Number of sets to retrieve (default: 5, max: 20)")
   end
   
-  def call(exercise:, limit: 5)
-    authenticate_user!
+  def perform(exercise:, limit: 5)
+    # authenticate_user! is already called by ApplicationTool#call
     
     # Validate limit parameter
     limit = [[limit, 1].max, 20].min

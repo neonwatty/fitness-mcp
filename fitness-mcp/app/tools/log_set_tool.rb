@@ -8,8 +8,8 @@ class LogSetTool < ApplicationTool
     optional(:timestamp).filled(:string).description("ISO timestamp of when set was completed (defaults to current time)")
   end
   
-  def call(exercise:, weight:, reps:, timestamp: nil)
-    authenticate_user!
+  def perform(exercise:, weight:, reps:, timestamp: nil)
+    # authenticate_user! is already called by ApplicationTool#call
     
     parsed_timestamp = timestamp ? Time.parse(timestamp) : Time.current
     

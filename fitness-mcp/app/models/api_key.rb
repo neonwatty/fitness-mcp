@@ -48,4 +48,14 @@ class ApiKey < ApplicationRecord
     hashed_key = hash_key(key)
     active.find_by(api_key_hash: hashed_key)
   end
+  
+  # Alias for find_by_key for backwards compatibility
+  def self.find_by_api_key_value(key)
+    find_by_key(key)
+  end
+  
+  # Get the decrypted API key value
+  def decrypted_api_key_value
+    api_key_value
+  end
 end

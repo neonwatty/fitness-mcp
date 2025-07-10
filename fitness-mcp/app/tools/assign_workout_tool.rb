@@ -7,8 +7,8 @@ class AssignWorkoutTool < ApplicationTool
     optional(:scheduled_for).filled(:string).description("ISO timestamp for when workout is scheduled")
   end
   
-  def call(assignment_name:, exercises:, scheduled_for: nil)
-    authenticate_user!
+  def perform(assignment_name:, exercises:, scheduled_for: nil)
+    # authenticate_user! is already called by ApplicationTool#call
     
     # Validate exercises structure
     unless exercises.is_a?(Array) && exercises.all? { |ex| valid_exercise?(ex) }

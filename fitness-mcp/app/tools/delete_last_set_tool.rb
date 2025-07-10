@@ -5,8 +5,8 @@ class DeleteLastSetTool < ApplicationTool
     required(:exercise).filled(:string).description("Name of the exercise to delete the last set for")
   end
   
-  def call(exercise:)
-    authenticate_user!
+  def perform(exercise:)
+    # authenticate_user! is already called by ApplicationTool#call
     
     normalized_exercise = exercise.strip.downcase
     last_set = current_user.set_entries
