@@ -12,5 +12,5 @@ export PATH="/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin:$PATH"
 # Start the server in STDIO mode
 cd "$(dirname "$0")"
 
-# Run the server and filter out logger lines (they start with a letter followed by comma)
-/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin/ruby bin/mcp_server.rb stdio 2>&1 | sed -n '/^{.*}$/p'
+# Run the clean server and filter out log lines (keep only JSON-RPC responses)
+/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin/ruby mcp_server_clean.rb stdio 2>/dev/null | grep '^{'
