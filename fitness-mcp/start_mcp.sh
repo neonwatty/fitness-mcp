@@ -11,4 +11,6 @@ export PATH="/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin:$PATH"
 
 # Start the server in STDIO mode
 cd "$(dirname "$0")"
-/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin/ruby bin/mcp_server.rb stdio
+
+# Run the server and filter out logger lines (they start with a letter followed by comma)
+/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin/ruby bin/mcp_server.rb stdio 2>&1 | sed -n '/^{.*}$/p'
