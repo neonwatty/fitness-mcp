@@ -22,11 +22,17 @@ class AssignWorkoutTool < ApplicationTool
     
     config = {
       exercises: exercises.map do |exercise|
+        # Support both string and symbol keys
+        name = exercise['name'] || exercise[:name]
+        sets = exercise['sets'] || exercise[:sets]
+        reps = exercise['reps'] || exercise[:reps]
+        weight = exercise['weight'] || exercise[:weight]
+        
         {
-          name: exercise['name'].strip.downcase,
-          sets: exercise['sets'].to_i,
-          reps: exercise['reps'].to_i,
-          weight: exercise['weight'].to_f
+          name: name.strip.downcase,
+          sets: sets.to_i,
+          reps: reps.to_i,
+          weight: weight.to_f
         }
       end
     }
@@ -63,14 +69,17 @@ class AssignWorkoutTool < ApplicationTool
   private
   
   def valid_exercise?(exercise)
-    exercise.is_a?(Hash) &&
-      exercise.key?('name') &&
-      exercise.key?('sets') &&
-      exercise.key?('reps') &&
-      exercise.key?('weight') &&
-      exercise['name'].present? &&
-      exercise['sets'].to_i > 0 &&
-      exercise['reps'].to_i > 0 &&
-      exercise['weight'].to_f >= 0
+    return false unless exercise.is_a?(Hash)
+    
+    # Support both string and symbol keys
+    name = exercise['name'] || exercise[:name]
+    sets = exercise['sets'] || exercise[:sets]
+    reps = exercise['reps'] || exercise[:reps]
+    weight = exercise['weight'] || exercise[:weight]
+    
+    name.present? &&
+      sets.to_i > 0 &&
+      reps.to_i > 0 &&
+      weight.to_f >= 0
   end
 end

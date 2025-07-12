@@ -2,7 +2,6 @@ class WorkoutAssignment < ApplicationRecord
   belongs_to :user
   
   validates :assignment_name, presence: true
-  validates :scheduled_for, presence: true
   validates :config, presence: true
   
   scope :scheduled, -> { where.not(scheduled_for: nil) }
