@@ -12,6 +12,5 @@ export PATH="/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin:$PATH"
 # Start the server in STDIO mode
 cd "$(dirname "$0")"
 
-# Run the clean server and filter/fix output for Claude Desktop compatibility
-# Only output JSON responses and fix null ID issue
-/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin/ruby mcp_server_clean.rb stdio 2>&1 | grep -E '^[[:space:]]*\{' | sed 's/"id":null/"id":0/g'
+# Run the fast server - now with suppressed logging and null ID fix
+/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin/ruby mcp_server_fast.rb stdio | sed 's/"id":null/"id":0/g'

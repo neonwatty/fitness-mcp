@@ -2,15 +2,25 @@
 
 # Clean MCP server implementation
 ENV['API_KEY'] ||= 'c52fea4b46bcad9f8c692715179dd386'
+ENV['RAILS_ENV'] ||= 'development'
+
+# Skip Rails initialization for faster startup in STDIO mode
+if ARGV[0] == 'stdio'
+  # Minimal Rails loading for MCP
+  ENV['RAILS_LOG_LEVEL'] = 'error'
+end
 
 # Load Rails with minimal logging
 require_relative 'config/environment'
 
-# Suppress Rails logging to prevent STDOUT contamination
+# Suppress all Rails logging for STDIO mode
 if ARGV[0] == 'stdio'
-  Rails.logger = Logger.new('/tmp/mcp_rails.log')
-  Rails.logger.level = Logger::ERROR
+  Rails.logger = Logger.new('/dev/null')
+  Rails.logger.level = Logger::FATAL
   ActiveRecord::Base.logger = nil if defined?(ActiveRecord)
+  
+  # Minimize ActiveRecord overhead
+  ActiveRecord::Base.connection.execute("PRAGMA journal_mode = MEMORY") if ActiveRecord::Base.connection.adapter_name == 'SQLite'
 end
 
 require 'fast_mcp'
