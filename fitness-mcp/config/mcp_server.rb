@@ -41,18 +41,7 @@ module FitnessMcp
       ]
       
       tool_classes.each do |tool_class|
-        server.register_tool(tool_class) do |context|
-          # Dynamic filtering based on user permissions
-          user = context[:user]
-          next false unless user
-          
-          # Example: Only admins can delete sets
-          if tool_class == DeleteLastSetTool
-            user.respond_to?(:admin?) ? user.admin? : true
-          else
-            true
-          end
-        end
+        server.register_tool(tool_class)
       end
     end
     

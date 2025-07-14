@@ -6,16 +6,14 @@ class ExerciseListResource < FastMcp::Resource
   
   def content
     # Get all unique exercises from the database
-    exercises = SetEntry.group(:exercise)
-                       .group_by(&:exercise)
-                       .map do |exercise, sets|
+    exercises = SetEntry.all.group_by(&:exercise).map do |exercise, sets|
       {
         name: exercise,
         total_sets: sets.count,
         total_users: sets.map(&:user_id).uniq.count,
-        average_weight: sets.average(&:weight)&.round(2),
-        max_weight: sets.maximum(&:weight),
-        last_performed: sets.maximum(&:timestamp)&.iso8601,
+        average_weight: sets.map(&:weight).sum.to_f / sets.count,
+        max_weight: sets.map(&:weight).max,
+        last_performed: sets.map(&:timestamp).max&.iso8601,
         popularity_rank: nil # Will be calculated below
       }
     end

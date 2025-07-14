@@ -10,7 +10,7 @@ class UserStatsResource < FastMcp::Resource
     
     # Authenticate user access
     unless can_access_user_data?(user_id)
-      raise FastMcp::AuthenticationError, "Access denied to user #{user_id} statistics"
+      raise StandardError, "Access denied to user #{user_id} statistics"
     end
     
     user = User.find(user_id)
@@ -26,7 +26,7 @@ class UserStatsResource < FastMcp::Resource
     # Calculate comprehensive stats
     stats_data = {
       user_id: user.id,
-      user_name: user.name,
+      user_email: user.email,
       period_days: days_back,
       
       # Overall statistics

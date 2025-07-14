@@ -10,7 +10,7 @@ class WorkoutHistoryResource < FastMcp::Resource
     
     # Authenticate user access
     unless can_access_user_data?(user_id)
-      raise FastMcp::AuthenticationError, "Access denied to user #{user_id} workout history"
+      raise StandardError, "Access denied to user #{user_id} workout history"
     end
     
     user = User.find(user_id)
@@ -23,7 +23,7 @@ class WorkoutHistoryResource < FastMcp::Resource
     
     history_data = {
       user_id: user.id,
-      user_name: user.name,
+      user_email: user.email,
       total_sets: user.set_entries.count,
       recent_sets: sets.map do |set|
         {
