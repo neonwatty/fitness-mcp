@@ -10,7 +10,7 @@ class GetRecentSetsTool < ApplicationTool
     limit = [[limit, 1].max, 50].min
     
     sets = current_user.set_entries
-                      .recent
+                      .order(timestamp: :desc)
                       .limit(limit)
     
     if sets.any?
@@ -18,7 +18,7 @@ class GetRecentSetsTool < ApplicationTool
         {
           id: set.id,
           exercise: set.exercise,
-          weight: set.weight,
+          weight: set.weight.to_f,
           reps: set.reps,
           timestamp: set.timestamp.iso8601
         }

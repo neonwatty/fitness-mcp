@@ -22,7 +22,7 @@ class DeleteLastSetTool < ApplicationTool
         deleted_set = {
           id: last_set.id,
           exercise: last_set.exercise,
-          weight: last_set.weight,
+          weight: last_set.weight.to_f,
           reps: last_set.reps,
           timestamp: last_set.timestamp.iso8601
         }

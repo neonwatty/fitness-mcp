@@ -29,7 +29,7 @@ class LogSetTool < ApplicationTool
       set_entry: {
         id: set_entry.id,
         exercise: set_entry.exercise,
-        weight: set_entry.weight,
+        weight: set_entry.weight.to_f,
         reps: set_entry.reps,
         timestamp: set_entry.timestamp.iso8601
       }
