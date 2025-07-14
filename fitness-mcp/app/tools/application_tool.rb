@@ -1,4 +1,4 @@
-class ApplicationTool < MCP::Tool
+class ApplicationTool < FastMcp::Tool
   def initialize(api_key: nil)
     @api_key = api_key || ENV['API_KEY']
     super()
@@ -22,41 +22,44 @@ class ApplicationTool < MCP::Tool
       raise
     ensure
       # Log the tool usage
-      log_tool_usage(
-        arguments: args,
-        result_success: success,
-        execution_time: Time.current - start_time
-      )
+      log_audit(result_success: success, execution_time: Time.current - start_time)
+    end
+  end
+  
+  def authenticate_user!
+    api_key = @api_key
+    
+    unless api_key && current_user(api_key)
+      raise StandardError, "Authentication required. Please provide a valid API key."
     end
   end
   
   protected
   
-  def current_user
-    return nil unless api_key.present?
-    current_api_key_record&.user
-  end
-  
-  def current_api_key_record
+  def current_user(api_key = nil)
+    api_key ||= @api_key
     return nil unless api_key.present?
     
     key_hash = ApiKey.hash_key(api_key)
-    @current_api_key_record ||= ApiKey.active.find_by(api_key_hash: key_hash)
+    api_key_record = ApiKey.active.find_by(api_key_hash: key_hash)
+    api_key_record&.user
+  end
+  
+  def current_api_key_record(api_key = nil)
+    api_key ||= @api_key
+    return nil unless api_key.present?
+    
+    key_hash = ApiKey.hash_key(api_key)
+    ApiKey.active.find_by(api_key_hash: key_hash)
   end
   
   def api_key
     @api_key
   end
   
-  def authenticate_user!
-    unless current_user
-      raise StandardError, "Authentication required. Please provide a valid API key."
-    end
-  end
-  
   private
   
-  def log_tool_usage(arguments:, result_success:, execution_time:)
+  def log_audit(result_success:, execution_time:)
     user = current_user
     api_key_record = current_api_key_record
     
@@ -67,20 +70,21 @@ class ApplicationTool < MCP::Tool
         user: user,
         api_key: api_key_record,
         tool_name: self.class.name,
-        arguments: arguments,
+        arguments: {},
         result_success: result_success,
         ip_address: extract_ip_address
       )
     rescue => e
       # Don't let audit logging failure break the main functionality
-      Rails.logger.error "Failed to log MCP tool usage: #{e.message}"
-      Rails.logger.error e.backtrace.join("\n")
+      if defined?(Rails)
+        Rails.logger.error "Failed to log MCP tool usage: #{e.message}"
+        Rails.logger.error e.backtrace.join("\n")
+      end
     end
   end
   
   def extract_ip_address
-    # This is a placeholder - in a real MCP server, we'd extract this from the request context
-    # For now, we'll just return a default value
+    # Use default for now
     'MCP_CLIENT'
   end
 end
