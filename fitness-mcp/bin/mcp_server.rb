@@ -1,18 +1,9 @@
 #!/usr/bin/env ruby
 
-# For STDIO mode, completely suppress all logging to avoid JSON-RPC interference
+# For STDIO mode, prepare for clean JSON-RPC communication
 if ARGV[0] == 'stdio'
-  # Redirect STDOUT and STDERR to /dev/null during Rails loading
   $stdout.sync = true
   $stderr.sync = true
-  
-  # Capture the original STDOUT
-  original_stdout = $stdout.dup
-  
-  # Redirect all output to /dev/null during Rails initialization
-  null_file = File.open('/dev/null', 'w')
-  $stdout.reopen(null_file)
-  $stderr.reopen(null_file)
 end
 
 # Load Rails environment
@@ -42,48 +33,7 @@ begin
     end
   end
   
-  # MUST monkey-patch MCP::Logger BEFORE loading fast_mcp
-  if ARGV[0] == 'stdio'
-    require 'logger'
-    module MCP
-      class Logger < ::Logger
-        def initialize(*args)
-          # Always log to /dev/null for STDIO mode
-          super('/dev/null')
-          @client_initialized = false
-          @transport = nil
-        end
-        
-        attr_accessor :transport, :client_initialized
-        
-        def client_initialized?
-          @client_initialized
-        end
-        
-        def stdio_transport?
-          transport == :stdio
-        end
-        
-        def rack_transport?
-          transport == :rack
-        end
-        
-        # Override all logging methods to be no-ops
-        def add(*args); end
-        def log(*args); end
-        def <<(*args); end
-        def debug(*args); end
-        def info(*args); end
-        def warn(*args); end
-        def error(*args); end
-        def fatal(*args); end
-        def unknown(*args); end
-        def close; end
-        def level; Logger::FATAL; end
-        def level=(val); end
-      end
-    end
-  end
+  # Load fast_mcp after Rails is ready
   
   require 'fast_mcp'
   
@@ -120,35 +70,28 @@ rescue => e
   raise
 end
 
-# For STDIO mode, restore STDOUT and configure minimal logging
+# For STDIO mode, configure minimal logging to avoid JSON-RPC interference  
 if ARGV[0] == 'stdio'
-  # Restore STDOUT for JSON-RPC communication
-  $stdout.reopen(original_stdout)
+  # Redirect STDERR to /dev/null to suppress Rails logging
+  $stderr.reopen('/dev/null', 'w')
   
-  # Keep STDERR redirected to /dev/null
-  Rails.logger = Logger.new('/dev/null')
-  Rails.logger.level = Logger::FATAL
+  # Configure Rails to log to file instead of STDOUT/STDERR
+  Rails.logger = Logger.new('/tmp/mcp_rails.log')
+  Rails.logger.level = Logger::ERROR
   
-  # Suppress all Active Record logging
-  ActiveRecord::Base.logger = nil if defined?(ActiveRecord)
+  # Suppress all Active Record logging to STDOUT
+  ActiveRecord::Base.logger = Rails.logger if defined?(ActiveRecord)
   
   # Suppress other Rails loggers
-  ActionController::Base.logger = nil if defined?(ActionController)
-  ActionView::Base.logger = nil if defined?(ActionView)
-  ActionMailer::Base.logger = nil if defined?(ActionMailer)
-  ActiveJob::Base.logger = nil if defined?(ActiveJob)
-  ActionCable.server.config.logger = nil if defined?(ActionCable)
+  ActionController::Base.logger = Rails.logger if defined?(ActionController)
+  ActionView::Base.logger = Rails.logger if defined?(ActionView)
+  ActionMailer::Base.logger = Rails.logger if defined?(ActionMailer)
+  ActiveJob::Base.logger = Rails.logger if defined?(ActiveJob)
+  ActionCable.server.config.logger = Rails.logger if defined?(ActionCable)
   
-  # Suppress Rack logger
-  Rails.application.config.logger = Logger.new('/dev/null')
-  Rails.application.config.log_level = :fatal
-  
-  # Disable request logging middleware
-  Rails.application.config.middleware.delete(Rails::Rack::Logger) if defined?(Rails::Rack::Logger)
-  Rails.application.config.middleware.delete(ActionDispatch::DebugExceptions) if defined?(ActionDispatch::DebugExceptions)
-  
-  # Close the null file
-  null_file.close
+  # Configure application logger
+  Rails.application.config.logger = Rails.logger
+  Rails.application.config.log_level = :error
 end
 
 # Create MCP server with proper logger and error handling
@@ -193,11 +136,15 @@ class FitnessMCPServer < MCP::Server
   end
 end
 
-# Create a no-op logger for STDIO mode
+# Create appropriate logger for the mode
 logger = if ARGV[0] == 'stdio'
-  MCP::Logger.new  # Will use our monkey-patched version
+  # For STDIO mode, create a logger that writes to file to avoid JSON-RPC interference
+  file_logger = Logger.new('/tmp/mcp_server.log')
+  file_logger.level = Logger::ERROR  # Only log errors
+  file_logger
 else
-  Logger.new(STDOUT)  # Use standard logger for non-STDIO mode
+  # For other modes, use standard STDOUT logger
+  Logger.new(STDOUT)
 end
 
 server = FitnessMCPServer.new(

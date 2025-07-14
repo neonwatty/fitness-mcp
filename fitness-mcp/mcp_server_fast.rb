@@ -18,12 +18,43 @@ ActiveRecord::Base.establish_connection(
   timeout: 5000
 )
 
-# Suppress all logging for STDIO mode
+# CRITICAL: Suppress ALL logging for STDIO mode before loading anything else
 if ARGV[0] == 'stdio'
   ActiveRecord::Base.logger = nil
   
   # Redirect STDERR to suppress fast_mcp logs
   $stderr.reopen('/dev/null', 'w')
+  
+  # Monkey patch MCP::Logger to suppress all output
+  module MCP
+    class Logger
+      def initialize(*args); end
+      def info(*args); end
+      def debug(*args); end
+      def warn(*args); end
+      def error(*args); end
+      def log(*args); end
+      def add(*args); end
+      def <<(*args); end
+      def fatal(*args); end
+      def unknown(*args); end
+      def level=(*args); end
+      def level; 0; end
+      def progname=(*args); end
+      def progname; nil; end
+      def formatter=(*args); end
+      def formatter; nil; end
+      def datetime_format=(*args); end
+      def datetime_format; nil; end
+      def close; end
+      def reopen(*args); end
+    end
+  end
+  
+  # Also suppress any puts/print statements
+  def puts(*args); end
+  def print(*args); end
+  def p(*args); end
 end
 
 # Load only the model files we need

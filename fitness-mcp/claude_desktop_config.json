@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "fitness-mcp": {
-      "command": "/Users/jeremywatt/Desktop/fitness-mcp/fitness-mcp/start_mcp.sh",
+      "command": "/Users/jeremywatt/Desktop/fitness-mcp/fitness-mcp/start_mcp_debug.sh",
       "env": {
         "API_KEY": "c52fea4b46bcad9f8c692715179dd386"
       }
