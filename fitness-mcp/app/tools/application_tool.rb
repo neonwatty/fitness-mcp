@@ -5,7 +5,7 @@ class ApplicationTool < FastMcp::Tool
   end
   
   def call(**args)
-    # Override to add authentication and audit logging
+    # Authentication and audit logging
     authenticate_user!
     
     start_time = Time.current
