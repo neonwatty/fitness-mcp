@@ -1,7 +1,7 @@
 class ApplicationTool < FastMcp::Tool
   def initialize(api_key: nil)
     @api_key = api_key || ENV['API_KEY']
-    super()
+    super(headers: {})
   end
   
   def call(**args)
