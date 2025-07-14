@@ -3,7 +3,7 @@ class LogSetTool < ApplicationTool
   
   arguments do
     required(:exercise).filled(:string).description("Name of the exercise (e.g., 'barbell squat', 'deadlift')")
-    required(:weight).filled(:float).description("Weight used in pounds or kilograms")
+    required(:weight).filled.description("Weight used in pounds or kilograms")
     required(:reps).filled(:integer).description("Number of repetitions completed")
     optional(:timestamp).filled(:string).description("ISO timestamp of when set was completed (defaults to current time)")
   end
@@ -13,20 +13,23 @@ class LogSetTool < ApplicationTool
     
     parsed_timestamp = timestamp ? Time.parse(timestamp) : Time.current
     
+    # Convert weight to float to handle both integers and floats
+    weight_float = weight.to_f
+    
     set_entry = current_user.set_entries.create!(
       exercise: exercise.strip.downcase,
-      weight: weight,
+      weight: weight_float,
       reps: reps,
       timestamp: parsed_timestamp
     )
     
     {
       success: true,
-      message: "Successfully logged #{reps} reps of #{exercise} at #{weight} lbs",
+      message: "Successfully logged #{reps} reps of #{exercise} at #{weight_float} lbs",
       set_entry: {
         id: set_entry.id,
         exercise: set_entry.exercise,
-        weight: set_entry.weight,
+        weight: set_entry.weight.to_f,
         reps: set_entry.reps,
         timestamp: set_entry.timestamp.iso8601
       }

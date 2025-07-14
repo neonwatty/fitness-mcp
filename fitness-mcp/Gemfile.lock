@@ -1,3 +1,15 @@
+GIT
+  remote: https://github.com/yjacquin/fast-mcp.git
+  revision: 44c314bd80b552d2793ffa34a45f440c0e82756e
+  specs:
+    fast-mcp (1.5.0)
+      addressable (~> 2.8)
+      base64
+      dry-schema (~> 1.14)
+      json (~> 2.0)
+      mime-types (~> 3.4)
+      rack (~> 3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -137,10 +149,6 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
-    fast-mcp (0.1.0)
-      dry-schema (~> 1.14)
-      json (~> 2.0)
-      mime-types (~> 3.4)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -406,7 +414,7 @@ DEPENDENCIES
   brakeman
   capybara (>= 3.26)
   debug
-  fast-mcp (~> 0.1.0)
+  fast-mcp!
   importmap-rails
   kamal
   puma (>= 5.0)

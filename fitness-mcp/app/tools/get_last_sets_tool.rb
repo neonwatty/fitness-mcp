@@ -14,8 +14,8 @@ class GetLastSetsTool < ApplicationTool
     
     normalized_exercise = exercise.strip.downcase
     sets = current_user.set_entries
-                      .for_exercise(normalized_exercise)
-                      .recent
+                      .where(exercise: normalized_exercise)
+                      .order(timestamp: :desc)
                       .limit(limit)
     
     if sets.any?
@@ -23,7 +23,7 @@ class GetLastSetsTool < ApplicationTool
         {
           id: set.id,
           exercise: set.exercise,
-          weight: set.weight,
+          weight: set.weight.to_f,
           reps: set.reps,
           timestamp: set.timestamp.iso8601
         }

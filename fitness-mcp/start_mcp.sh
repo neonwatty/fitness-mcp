@@ -8,10 +8,10 @@ fi
 
 # Ensure we use the correct Ruby version (mise/rbenv)
 export PATH="/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin:$PATH"
-eval "$(mise activate bash)"
+eval "$(/Users/jeremywatt/.local/bin/mise activate bash)"
 
 # Start the server in STDIO mode
 cd "$(dirname "$0")"
 
-# Run the fast server - now with suppressed logging and null ID fix
-/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin/ruby mcp_server_fast.rb stdio | sed 's/"id":null/"id":0/g'
+# Use the new unified MCP server
+/Users/jeremywatt/.local/share/mise/installs/ruby/3.4.2/bin/ruby mcp_server.rb stdio
