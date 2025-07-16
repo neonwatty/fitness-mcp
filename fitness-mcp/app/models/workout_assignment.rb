@@ -4,6 +4,7 @@ class WorkoutAssignment < ApplicationRecord
   validates :assignment_name, presence: true
   validates :config, presence: true
   
+  scope :active, -> { all } # For now, all assignments are considered active
   scope :scheduled, -> { where.not(scheduled_for: nil) }
   scope :upcoming, -> { where("scheduled_for > ?", Time.current).order(:scheduled_for) }
   scope :past, -> { where("scheduled_for < ?", Time.current).order(:scheduled_for) }

@@ -80,7 +80,7 @@ class LogSetToolTest < ActiveSupport::TestCase
     
     assert_not result[:success]
     assert_includes result[:error], "Failed to log set"
-    assert_includes result[:error], "Weight must be greater than 0"
+    assert_includes result[:error], "Weight must be greater than or equal to 0"
     assert_includes result[:error], "Reps must be greater than 0"
   end
 

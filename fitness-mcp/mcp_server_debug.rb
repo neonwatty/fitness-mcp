@@ -71,9 +71,17 @@ require_relative 'app/tools/assign_workout_tool'
 
 puts "✅ Tools loaded"
 
+# Load resource files
+puts "📚 Loading resources..."
+require_relative 'app/resources/user_stats_resource'
+require_relative 'app/resources/workout_history_resource'
+require_relative 'app/resources/exercise_list_resource'
+
+puts "✅ Resources loaded"
+
 # Create MCP server
 puts "🚀 Creating MCP server..."
-server = MCP::Server.new(
+server = FastMcp::Server.new(
   name: 'fitness-mcp',
   version: '1.0.0'
 )
@@ -90,8 +98,20 @@ tool_classes.each_with_index do |tool_class, i|
 end
 
 puts "✅ All tools registered"
+
+# Register all fitness resources
+resource_classes = [UserStatsResource, WorkoutHistoryResource, ExerciseListResource]
+puts "📚 Registering #{resource_classes.length} resources..."
+
+resource_classes.each_with_index do |resource_class, i|
+  server.register_resource(resource_class)
+  puts "  #{i+1}. ✅ #{resource_class.name}"
+end
+
+puts "✅ All resources registered"
 puts "🎯 Server capabilities: #{server.capabilities}"
-puts "📋 Available tools: #{server.tools.keys.join(', ')}"
+puts "📋 Number of tools: #{tool_classes.length}"
+puts "📚 Number of resources: #{resource_classes.length}"
 
 # Start server based on arguments
 puts "🚀 Starting server in #{ARGV[0] || 'unknown'} mode..."

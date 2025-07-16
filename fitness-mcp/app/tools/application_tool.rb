@@ -22,7 +22,7 @@ class ApplicationTool < FastMcp::Tool
       raise
     ensure
       # Log the tool usage
-      log_audit(result_success: success, execution_time: Time.current - start_time)
+      log_audit(arguments: args, result_success: success, execution_time: Time.current - start_time)
     end
   end
   
@@ -59,7 +59,7 @@ class ApplicationTool < FastMcp::Tool
   
   private
   
-  def log_audit(result_success:, execution_time:)
+  def log_audit(arguments:, result_success:, execution_time:)
     user = current_user
     api_key_record = current_api_key_record
     
@@ -70,7 +70,7 @@ class ApplicationTool < FastMcp::Tool
         user: user,
         api_key: api_key_record,
         tool_name: self.class.name,
-        arguments: {},
+        arguments: arguments,
         result_success: result_success,
         ip_address: extract_ip_address
       )

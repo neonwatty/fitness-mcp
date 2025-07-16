@@ -26,7 +26,7 @@ end
 require 'fast_mcp'
 
 # Create MCP server with default logger (it handles STDIO properly)
-server = MCP::Server.new(
+server = FastMcp::Server.new(
   name: 'fitness-mcp',
   version: '1.0.0'
 )
@@ -34,6 +34,11 @@ server = MCP::Server.new(
 # Register all fitness tools
 [LogSetTool, GetLastSetTool, GetLastSetsTool, GetRecentSetsTool, DeleteLastSetTool, AssignWorkoutTool].each do |tool_class|
   server.register_tool(tool_class)
+end
+
+# Register all fitness resources
+[UserStatsResource, WorkoutHistoryResource, ExerciseListResource].each do |resource_class|
+  server.register_resource(resource_class)
 end
 
 # Start server based on arguments

@@ -80,6 +80,7 @@ class AssignWorkoutTool < ApplicationTool
     name.present? &&
       sets.to_i > 0 &&
       reps.to_i > 0 &&
+      weight.present? &&
       weight.to_f >= 0
   end
 end

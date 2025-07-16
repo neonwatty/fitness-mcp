@@ -61,7 +61,7 @@ class FitnessApiTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     json = JSON.parse(response.body)
     assert_not json["success"]
-    assert_includes json["message"], "Weight must be greater than 0"
+    assert_includes json["message"], "Weight must be greater than or equal to 0"
   end
 
   test "should get workout history" do

@@ -29,9 +29,9 @@ class WorkoutHistoryResource < FastMcp::Resource
         {
           id: set.id,
           exercise: set.exercise,
-          weight: set.weight,
+          weight: set.weight.to_f,
           reps: set.reps,
-          timestamp: set.timestamp.iso8601,
+          timestamp: set.timestamp&.iso8601,
           created_at: set.created_at.iso8601
         }
       end

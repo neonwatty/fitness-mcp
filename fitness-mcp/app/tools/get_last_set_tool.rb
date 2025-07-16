@@ -18,7 +18,7 @@ class GetLastSetTool < ApplicationTool
     if last_set
       {
         success: true,
-        message: "Found last set for #{exercise}",
+        message: "Last #{exercise}: #{last_set.reps} reps at #{last_set.weight.to_f} lbs",
         last_set: {
           id: last_set.id,
           exercise: last_set.exercise,
@@ -44,7 +44,7 @@ class GetLastSetTool < ApplicationTool
       else
         {
           success: false,
-          message: "No sets found for '#{exercise}'. You haven't logged any sets for this exercise yet.",
+          message: "No sets found for #{exercise}",
           available_exercises: current_user.set_entries.distinct.pluck(:exercise)
         }
       end
