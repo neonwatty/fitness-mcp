@@ -1,0 +1,722 @@
+<div class="min-h-screen bg-gradient-to-br from-secondary-900 via-secondary-800 to-secondary-900">
+  <!-- Header -->
+  <div class="bg-secondary-900/80 backdrop-blur-sm shadow-soft-dark sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold text-gradient">API Documentation</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="badge badge-primary">v<%= @api_info[:version] %></span>
+          <% if session[:user_id] %>
+            <%= link_to "Dashboard", dashboard_path, class: "btn-secondary text-sm" %>
+          <% else %>
+            <%= link_to "Sign In", login_path, class: "btn-primary text-sm" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Overview Section -->
+    <div class="card mb-8">
+      <div class="card-header">
+        <h2 class="text-xl font-bold text-secondary-100">Overview</h2>
+      </div>
+      <div class="card-body space-y-4">
+        <p class="text-secondary-300"><%= @api_info[:description] %></p>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-primary-900/20 rounded-xl p-4">
+            <h3 class="font-semibold text-primary-900 mb-2">Base URL</h3>
+            <code class="text-sm bg-secondary-900 px-3 py-1.5 rounded-lg border border-primary-800 font-mono block">
+              <%= @api_info[:base_url] %><%= @api_info[:api_base] %>
+            </code>
+          </div>
+          <div class="bg-secondary-800 rounded-xl p-4">
+            <h3 class="font-semibold text-secondary-100 mb-2">Authentication</h3>
+            <p class="text-sm text-secondary-300">All API requests require an API key in the header:</p>
+            <code class="text-sm bg-secondary-900 px-3 py-1.5 rounded-lg border border-secondary-700 font-mono block mt-2">
+              X-API-Key: your-api-key-here
+            </code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Authentication Endpoints -->
+    <div class="card mb-8">
+      <div class="card-header">
+        <h2 class="text-xl font-bold text-secondary-100">
+          <svg class="inline w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+          </svg>
+          Authentication
+        </h2>
+      </div>
+      <div class="card-body">
+        <!-- Register Endpoint -->
+        <div class="border-b border-secondary-700 pb-6 mb-6 last:border-b-0 last:pb-0 last:mb-0">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">User Registration</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-success">POST</span>
+                <code class="text-sm text-secondary-400 font-mono">/auth/register</code>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('register-example')" class="btn-secondary text-xs">
+              Copy Example
+            </button>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Request Body</h4>
+              <div class="bg-secondary-800 rounded-lg p-3">
+                <pre class="text-sm font-mono text-secondary-300" id="register-example">{
+  "user": {
+    "email": "user@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }
+}</pre>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Response (201 Created)</h4>
+              <div class="bg-success-900/20 rounded-lg p-3">
+                <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "message": "User created successfully",
+  "user": {
+    "id": 1,
+    "email": "user@example.com"
+  }
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login Endpoint -->
+        <div class="border-b border-secondary-700 pb-6 mb-6 last:border-b-0 last:pb-0 last:mb-0">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">User Login</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-success">POST</span>
+                <code class="text-sm text-secondary-400 font-mono">/auth/login</code>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('login-example')" class="btn-secondary text-xs">
+              Copy Example
+            </button>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Request Body</h4>
+              <div class="bg-secondary-800 rounded-lg p-3">
+                <pre class="text-sm font-mono text-secondary-300" id="login-example">{
+  "email": "user@example.com",
+  "password": "password123"
+}</pre>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Response (200 OK)</h4>
+              <div class="bg-success-900/20 rounded-lg p-3">
+                <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "message": "Logged in successfully",
+  "user": {
+    "id": 1,
+    "email": "user@example.com"
+  }
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logout Endpoint -->
+        <div class="border-b border-secondary-700 pb-6 mb-6 last:border-b-0 last:pb-0 last:mb-0">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">User Logout</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-error">DELETE</span>
+                <code class="text-sm text-secondary-400 font-mono">/auth/logout</code>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Headers Required</h4>
+              <div class="bg-secondary-800 rounded-lg p-3">
+                <pre class="text-sm font-mono text-secondary-300">X-API-Key: your-api-key</pre>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Response (200 OK)</h4>
+              <div class="bg-success-900/20 rounded-lg p-3">
+                <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "message": "Logged out successfully"
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Key Management -->
+    <div class="card mb-8">
+      <div class="card-header">
+        <h2 class="text-xl font-bold text-secondary-100">
+          <svg class="inline w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+          </svg>
+          API Key Management
+        </h2>
+      </div>
+      <div class="card-body">
+        <!-- List API Keys -->
+        <div class="border-b border-secondary-700 pb-6 mb-6">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">List API Keys</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-primary">GET</span>
+                <code class="text-sm text-secondary-400 font-mono">/api_keys</code>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-medium text-secondary-300 mb-2">Response (200 OK)</h4>
+            <div class="bg-success-900/20 rounded-lg p-3">
+              <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "api_keys": [
+    {
+      "id": 1,
+      "name": "Development Key",
+      "key_preview": "sk_dev_abc...xyz",
+      "last_used_at": "2024-01-15T10:30:00Z",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ]
+}</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Create API Key -->
+        <div class="border-b border-secondary-700 pb-6 mb-6">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">Create API Key</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-success">POST</span>
+                <code class="text-sm text-secondary-400 font-mono">/api_keys</code>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('create-key-example')" class="btn-secondary text-xs">
+              Copy Example
+            </button>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Request Body</h4>
+              <div class="bg-secondary-800 rounded-lg p-3">
+                <pre class="text-sm font-mono text-secondary-300" id="create-key-example">{
+  "name": "Production Key"
+}</pre>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Response (201 Created)</h4>
+              <div class="bg-success-900/20 rounded-lg p-3">
+                <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "api_key": {
+    "id": 2,
+    "name": "Production Key",
+    "key": "sk_prod_1234567890abcdef",
+    "created_at": "2024-01-15T12:00:00Z"
+  }
+}</pre>
+              </div>
+              <p class="text-xs text-warning-600 mt-2">⚠️ Save this key securely - it won't be shown again!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revoke API Key -->
+        <div>
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">Revoke API Key</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-warning">PATCH</span>
+                <code class="text-sm text-secondary-400 font-mono">/api_keys/:id/revoke</code>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-medium text-secondary-300 mb-2">Response (200 OK)</h4>
+            <div class="bg-success-900/20 rounded-lg p-3">
+              <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "message": "API key revoked successfully"
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fitness Tracking Endpoints -->
+    <div class="card mb-8">
+      <div class="card-header">
+        <h2 class="text-xl font-bold text-secondary-100">
+          <svg class="inline w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          Fitness Tracking
+        </h2>
+      </div>
+      <div class="card-body">
+        <!-- Log Set -->
+        <div class="border-b border-secondary-700 pb-6 mb-6">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">Log Exercise Set</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-success">POST</span>
+                <code class="text-sm text-secondary-400 font-mono">/fitness/log_set</code>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('log-set-example')" class="btn-secondary text-xs">
+              Copy Example
+            </button>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Request Body</h4>
+              <div class="bg-secondary-800 rounded-lg p-3">
+                <pre class="text-sm font-mono text-secondary-300" id="log-set-example">{
+  "exercise": "Bench Press",
+  "weight": 135.5,
+  "reps": 8,
+  "timestamp": "2024-01-15T10:30:00Z"
+}</pre>
+              </div>
+              <div class="mt-2 text-sm text-secondary-400">
+                <p class="font-medium mb-1">Parameters:</p>
+                <ul class="list-disc list-inside space-y-1">
+                  <li><code>exercise</code> (string, required)</li>
+                  <li><code>weight</code> (number, required)</li>
+                  <li><code>reps</code> (integer, required)</li>
+                  <li><code>timestamp</code> (ISO 8601, optional)</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Response (201 Created)</h4>
+              <div class="bg-success-900/20 rounded-lg p-3">
+                <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "message": "Set logged successfully",
+  "set": {
+    "id": 123,
+    "exercise": "Bench Press",
+    "weight": 135.5,
+    "reps": 8,
+    "timestamp": "2024-01-15T10:30:00Z"
+  }
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Get History -->
+        <div class="border-b border-secondary-700 pb-6 mb-6">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">Get Exercise History</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-primary">GET</span>
+                <code class="text-sm text-secondary-400 font-mono">/fitness/history</code>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Query Parameters</h4>
+              <div class="bg-secondary-800 rounded-lg p-3">
+                <pre class="text-sm font-mono text-secondary-300">?exercise=Bench Press&limit=10</pre>
+              </div>
+              <div class="mt-2 text-sm text-secondary-400">
+                <p class="font-medium mb-1">Parameters:</p>
+                <ul class="list-disc list-inside space-y-1">
+                  <li><code>exercise</code> (string, optional) - Filter by exercise name</li>
+                  <li><code>limit</code> (integer, optional) - Max results to return</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Response (200 OK)</h4>
+              <div class="bg-success-900/20 rounded-lg p-3">
+                <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "history": [
+    {
+      "id": 123,
+      "exercise": "Bench Press",
+      "weight": 135.5,
+      "reps": 8,
+      "timestamp": "2024-01-15T10:30:00Z"
+    }
+  ]
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Get Last Set -->
+        <div class="border-b border-secondary-700 pb-6 mb-6">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">Get Last Set for Exercise</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-primary">GET</span>
+                <code class="text-sm text-secondary-400 font-mono">/fitness/get_last_set</code>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Query Parameters</h4>
+              <div class="bg-secondary-800 rounded-lg p-3">
+                <pre class="text-sm font-mono text-secondary-300">?exercise=Squat</pre>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Response (200 OK)</h4>
+              <div class="bg-success-900/20 rounded-lg p-3">
+                <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "set": {
+    "id": 122,
+    "exercise": "Squat",
+    "weight": 225,
+    "reps": 5,
+    "timestamp": "2024-01-14T09:15:00Z"
+  }
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delete Last Set -->
+        <div>
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">Delete Last Set</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-error">DELETE</span>
+                <code class="text-sm text-secondary-400 font-mono">/fitness/delete_last_set</code>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-medium text-secondary-300 mb-2">Response (200 OK)</h4>
+            <div class="bg-success-900/20 rounded-lg p-3">
+              <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "message": "Last set deleted successfully",
+  "deleted_set": {
+    "exercise": "Bench Press",
+    "weight": 135.5,
+    "reps": 8
+  }
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workout Planning -->
+    <div class="card mb-8">
+      <div class="card-header">
+        <h2 class="text-xl font-bold text-secondary-100">
+          <svg class="inline w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+          </svg>
+          Workout Planning
+        </h2>
+      </div>
+      <div class="card-body">
+        <!-- Create Plan -->
+        <div class="border-b border-secondary-700 pb-6 mb-6">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">Create Workout Plan</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-success">POST</span>
+                <code class="text-sm text-secondary-400 font-mono">/fitness/create_plan</code>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('create-plan-example')" class="btn-secondary text-xs">
+              Copy Example
+            </button>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Request Body</h4>
+              <div class="bg-secondary-800 rounded-lg p-3">
+                <pre class="text-sm font-mono text-secondary-300" id="create-plan-example">{
+  "name": "Upper Body Day",
+  "exercises": [
+    {
+      "name": "Bench Press",
+      "sets": 4,
+      "reps": "8-10"
+    },
+    {
+      "name": "Pull-ups",
+      "sets": 3,
+      "reps": "6-8"
+    }
+  ]
+}</pre>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Response (201 Created)</h4>
+              <div class="bg-success-900/20 rounded-lg p-3">
+                <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "message": "Plan created successfully",
+  "plan": {
+    "id": 1,
+    "name": "Upper Body Day",
+    "exercises_count": 2
+  }
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assign Workout -->
+        <div>
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-secondary-100 mb-1">Assign Workout</h3>
+              <div class="flex items-center space-x-2">
+                <span class="badge badge-success">POST</span>
+                <code class="text-sm text-secondary-400 font-mono">/fitness/assign_workout</code>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('assign-workout-example')" class="btn-secondary text-xs">
+              Copy Example
+            </button>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Request Body</h4>
+              <div class="bg-secondary-800 rounded-lg p-3">
+                <pre class="text-sm font-mono text-secondary-300" id="assign-workout-example">{
+  "workout_date": "2024-01-16",
+  "exercises": [
+    {
+      "name": "Squat",
+      "sets": 5,
+      "reps": 5,
+      "weight": 225
+    }
+  ]
+}</pre>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-secondary-300 mb-2">Response (201 Created)</h4>
+              <div class="bg-success-900/20 rounded-lg p-3">
+                <pre class="text-sm font-mono text-success-300">{
+  "success": true,
+  "message": "Workout assigned successfully",
+  "assignment": {
+    "id": 10,
+    "workout_date": "2024-01-16",
+    "exercises_count": 1
+  }
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Responses -->
+    <div class="card mb-8">
+      <div class="card-header bg-error-900/20">
+        <h2 class="text-xl font-bold text-error-900">
+          <svg class="inline w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Error Responses
+        </h2>
+      </div>
+      <div class="card-body">
+        <div class="space-y-4">
+          <div>
+            <h3 class="font-semibold text-secondary-100 mb-2">400 Bad Request</h3>
+            <div class="bg-error-900/20 rounded-lg p-3">
+              <pre class="text-sm font-mono text-error-300">{
+  "success": false,
+  "error": "Exercise is required"
+}</pre>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="font-semibold text-secondary-100 mb-2">401 Unauthorized</h3>
+            <div class="bg-error-900/20 rounded-lg p-3">
+              <pre class="text-sm font-mono text-error-300">{
+  "success": false,
+  "error": "Invalid or missing API key"
+}</pre>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="font-semibold text-secondary-100 mb-2">404 Not Found</h3>
+            <div class="bg-error-900/20 rounded-lg p-3">
+              <pre class="text-sm font-mono text-error-300">{
+  "success": false,
+  "error": "Resource not found"
+}</pre>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="font-semibold text-secondary-100 mb-2">422 Unprocessable Entity</h3>
+            <div class="bg-error-900/20 rounded-lg p-3">
+              <pre class="text-sm font-mono text-error-300">{
+  "success": false,
+  "message": "Weight must be greater than 0"
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCP Integration -->
+    <div class="card">
+      <div class="card-header bg-primary-900/20">
+        <h2 class="text-xl font-bold text-primary-900">
+          <svg class="inline w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+          </svg>
+          Model Context Protocol (MCP) Integration
+        </h2>
+      </div>
+      <div class="card-body">
+        <p class="text-secondary-300 mb-4">
+          This API is designed to work seamlessly with the Model Context Protocol (MCP) for AI-powered fitness tracking and planning.
+        </p>
+        
+        <div class="bg-primary-900/20 rounded-xl p-4">
+          <h3 class="font-semibold text-primary-900 mb-2">Available MCP Tools</h3>
+          <ul class="space-y-2 text-sm text-primary-300">
+            <li class="flex items-start">
+              <svg class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span><strong>LogSetTool</strong> - Log exercise sets with automatic timestamping</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span><strong>GetLastSetTool</strong> - Retrieve the last set for any exercise</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span><strong>GetRecentSetsTool</strong> - Get recent workout history</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span><strong>DeleteLastSetTool</strong> - Remove incorrectly logged sets</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span><strong>AssignWorkoutTool</strong> - Create workout assignments for specific dates</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyToClipboard(elementId) {
+  const element = document.getElementById(elementId);
+  const text = element.textContent;
+  
+  navigator.clipboard.writeText(text).then(() => {
+    // Show temporary success feedback
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = 'Copied!';
+    button.classList.add('bg-success-600', 'text-white');
+    
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.classList.remove('bg-success-600', 'text-white');
+    }, 2000);
+  });
+}
+
+// Add smooth scroll behavior for anchor links
+document.addEventListener('DOMContentLoaded', function() {
+  const links = document.querySelectorAll('a[href^="#"]');
+  links.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+});
+</script>
