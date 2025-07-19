@@ -35,12 +35,12 @@ class McpToolWorkflowTest < ActionDispatch::IntegrationTest
         result = log_tool.call(**set_data)
         
         assert result[:success], "Failed to log set: #{result[:error]}"
-        assert result[:set][:id], "Set ID not returned"
-        assert_equal set_data[:exercise], result[:set][:exercise]
-        assert_equal set_data[:weight], result[:set][:weight]
-        assert_equal set_data[:reps], result[:set][:reps]
+        assert result[:set_entry][:id], "Set ID not returned"
+        assert_equal set_data[:exercise], result[:set_entry][:exercise]
+        assert_equal set_data[:weight], result[:set_entry][:weight]
+        assert_equal set_data[:reps], result[:set_entry][:reps]
         
-        logged_set_ids << result[:set][:id]
+        logged_set_ids << result[:set_entry][:id]
       end
     end
     
@@ -181,7 +181,7 @@ class McpToolWorkflowTest < ActionDispatch::IntegrationTest
     delete_last_set_tool = DeleteLastSetTool.new(api_key: @api_key)
     
     # Try to get last set when no sets exist
-    result = get_last_set_tool.call
+    result = get_last_set_tool.call(exercise: "bench press")
     
     assert_not result[:success]
     assert_equal "No sets found for this exercise", result[:error]
@@ -258,8 +258,8 @@ class McpToolWorkflowTest < ActionDispatch::IntegrationTest
     results = []
     threads << Thread.new do
       5.times do
-        result = get_recent_tool.call(days: 1)
-        results << result[:sets]&.length || 0
+        result = get_recent_tool.call(limit: 10)
+        results << result[:set_entries]&.length || 0
         sleep(0.1)
       end
     end

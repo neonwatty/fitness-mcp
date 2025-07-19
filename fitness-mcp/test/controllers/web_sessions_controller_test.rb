@@ -21,7 +21,7 @@ class WebSessionsControllerTest < ActionDispatch::IntegrationTest
     
     assert_redirected_to "/dashboard"
     follow_redirect!
-    assert_select ".bg-green-100", text: "Login successful!"
+    assert_select ".alert-success", text: "Login successful!"
   end
 
   test "should not create session with invalid credentials" do
@@ -31,7 +31,7 @@ class WebSessionsControllerTest < ActionDispatch::IntegrationTest
     }
     
     assert_response :success
-    assert_select ".bg-red-100", text: "Invalid credentials"
+    assert_select ".alert-error", text: "Invalid email or password"
   end
 
   test "should not create session with missing credentials" do
@@ -40,7 +40,7 @@ class WebSessionsControllerTest < ActionDispatch::IntegrationTest
     }
     
     assert_response :success
-    assert_select ".bg-red-100", text: "Invalid credentials"
+    assert_select ".alert-error", text: "Invalid email or password"
   end
 
   test "should destroy session" do
@@ -54,6 +54,6 @@ class WebSessionsControllerTest < ActionDispatch::IntegrationTest
     delete "/logout"
     assert_redirected_to "/"
     follow_redirect!
-    assert_select ".bg-green-100", text: "Logout successful!"
+    assert_select ".alert-success", text: "Logout successful!"
   end
 end

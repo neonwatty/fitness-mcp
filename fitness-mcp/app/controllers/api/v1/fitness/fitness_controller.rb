@@ -6,7 +6,7 @@ class Api::V1::Fitness::FitnessController < Api::V1::BaseController
     return render_error("Reps is required", :bad_request) unless params[:reps].present?
     
     @set_entry = @current_user.set_entries.build(
-      exercise: params[:exercise],
+      exercise: params[:exercise].strip.downcase,
       weight: params[:weight].to_f,
       reps: params[:reps].to_i,
       timestamp: params[:timestamp] || Time.current

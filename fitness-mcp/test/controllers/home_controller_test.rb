@@ -20,8 +20,8 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     
     get "/dashboard"
     assert_response :success
-    assert_select "h1", text: "Welcome, test@example.com"
-    assert_select "h2", text: "API Keys"
+    assert_select "h1", text: "Welcome back, test@example.com"
+    assert_select "h2", text: "API Key Management"
     assert_select "h2", text: "API Testing Interface"
   end
 
@@ -29,7 +29,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     get "/dashboard"
     assert_redirected_to "/login"
     follow_redirect!
-    assert_select ".bg-red-100", text: "Please log in first"
+    assert_select ".alert-error", text: "Please log in first"
   end
 
   test "dashboard should show API testing interface" do

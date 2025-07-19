@@ -23,7 +23,7 @@ class WebUsersControllerTest < ActionDispatch::IntegrationTest
     
     assert_redirected_to "/dashboard"
     follow_redirect!
-    assert_select ".bg-green-100", text: "Account created successfully!"
+    assert_select ".alert-success", text: "Account created successfully!"
   end
 
   test "should not create user with invalid data" do
@@ -38,7 +38,7 @@ class WebUsersControllerTest < ActionDispatch::IntegrationTest
     end
     
     assert_response :success
-    assert_select ".bg-red-100"
+    assert_select ".alert-error"
   end
 
   test "should not create user with duplicate email" do
@@ -55,6 +55,6 @@ class WebUsersControllerTest < ActionDispatch::IntegrationTest
     end
     
     assert_response :success
-    assert_select ".bg-red-100"
+    assert_select ".alert-error"
   end
 end
