@@ -1,124 +1,225 @@
-<div class="space-y-8">
-  <div class="bg-white rounded-lg shadow-md p-6">
-    <h1 class="text-2xl font-bold mb-4">Welcome, <%= @user.email %></h1>
-    <p class="text-gray-600">Use this dashboard to manage your fitness data and test API endpoints.</p>
+<!-- Welcome Section -->
+<div class="card shadow-medium mb-8">
+  <div class="card-body">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center shadow-soft">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-secondary-100 mb-1">Welcome back, <%= @user.email %></h1>
+          <p class="text-secondary-400">Track your fitness progress and manage your API integrations</p>
+        </div>
+      </div>
+      <div class="hidden md:block">
+        <div class="bg-gradient-to-r from-success-900/20 to-success-800/20 rounded-xl p-4 border border-success-800">
+          <div class="flex items-center text-success-300">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-sm font-medium">Dashboard Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <!-- API Keys Section -->
-  <div class="bg-white rounded-lg shadow-md p-6">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-semibold">API Keys</h2>
-      <button onclick="createApiKey()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
-        Create New API Key
+<!-- API Keys Section -->
+<div class="card shadow-medium mb-8">
+  <div class="card-header">
+    <div class="flex justify-between items-center">
+      <div>
+        <h2 class="text-xl font-semibold text-secondary-100">API Key Management</h2>
+        <p class="text-sm text-secondary-400 mt-1">Manage your API keys for secure access to the fitness platform</p>
+      </div>
+      <button onclick="createApiKey()" class="btn-primary">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Create New Key
       </button>
     </div>
-    
+  </div>
+  <div class="card-body">
     <div id="api-keys-list">
       <% if @api_keys.any? %>
-        <div class="space-y-2">
+        <div class="space-y-3">
           <% @api_keys.each do |api_key| %>
-            <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+            <div class="list-item bg-secondary-800 rounded-xl border border-secondary-700 hover:border-secondary-600 transition-colors duration-200">
               <div class="flex-1">
-                <span class="font-medium"><%= api_key.name %></span>
-                <span class="text-sm text-gray-500 block">Created: <%= api_key.created_at.strftime('%Y-%m-%d') %></span>
-                <div class="mt-2 flex items-center gap-2">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-semibold text-secondary-100"><%= api_key.name %></span>
+                  <span class="badge badge-primary">Active</span>
+                </div>
+                <span class="text-sm text-secondary-400 block mb-3">Created: <%= api_key.created_at.strftime('%B %d, %Y') %></span>
+                <div class="flex items-center gap-2">
                   <input type="text" id="api-key-<%= api_key.id %>" 
                          value="<%= api_key.api_key_value || '[Key not available - created before this feature]' %>" 
-                         class="font-mono text-sm bg-white border border-gray-300 rounded px-2 py-1 flex-1"
+                         class="font-mono text-sm bg-secondary-900 border border-secondary-600 rounded-xl px-3 py-2 flex-1 focus:border-primary-500 focus:ring-2 focus:ring-primary-500 focus:ring-offset-0 transition-all duration-200 text-secondary-300"
                          readonly 
                          style="letter-spacing: 0.05em;"
                          <% if api_key.api_key_value.nil? %>disabled<% end %>>
                   <button onclick="toggleApiKeyVisibility(<%= api_key.id %>)" 
-                          class="text-gray-500 hover:text-gray-700 p-1 rounded"
+                          class="btn-secondary p-2"
                           <% if api_key.api_key_value.nil? %>disabled title="Key not available"<% end %>>
-                    <svg id="eye-icon-<%= api_key.id %>" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <svg id="eye-icon-<%= api_key.id %>" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
                   </button>
                   <button onclick="copyApiKey(<%= api_key.id %>)" 
-                          class="text-gray-500 hover:text-gray-700 p-1 rounded"
+                          class="btn-secondary p-2"
                           title="Copy to clipboard"
                           <% if api_key.api_key_value.nil? %>disabled<% end %>>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                  </button>
+                  <button onclick="revokeApiKey(<%= api_key.id %>)" class="btn-error p-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
                   </button>
                 </div>
               </div>
-              <button onclick="revokeApiKey(<%= api_key.id %>)" class="text-red-600 hover:text-red-800 text-sm ml-4">
-                Revoke
-              </button>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p class="text-gray-500">No API keys yet. Create one to get started.</p>
+        <div class="text-center py-12">
+          <svg class="w-16 h-16 text-secondary-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+          </svg>
+          <h3 class="text-lg font-medium text-secondary-100 mb-2">No API keys yet</h3>
+          <p class="text-secondary-400 mb-4">Create your first API key to get started with the platform</p>
+          <button onclick="createApiKey()" class="btn-primary">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Create Your First Key
+          </button>
+        </div>
       <% end %>
     </div>
   </div>
+</div>
 
-  <!-- API Testing Interface -->
-  <div class="bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-xl font-semibold mb-4">API Testing Interface</h2>
-    
+<!-- API Testing Interface -->
+<div class="card shadow-medium mb-8">
+  <div class="card-header">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-semibold text-secondary-100">API Testing Interface</h2>
+        <p class="text-sm text-secondary-400 mt-1">Test your API endpoints directly from the dashboard</p>
+      </div>
+      <div class="badge badge-success">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+        Live Testing
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
     <div class="grid lg:grid-cols-2 gap-8">
       <!-- API Key Input -->
-      <div class="space-y-4">
+      <div class="space-y-6">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
+          <label class="form-label">API Key</label>
           <input type="text" id="api-key-input" placeholder="Enter your API key" 
-                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <p class="text-xs text-gray-500 mt-1">Copy an API key from above or create a new one</p>
+                 class="form-input">
+          <p class="form-help">Copy an API key from above or create a new one</p>
         </div>
 
         <!-- Quick Actions -->
-        <div class="space-y-2">
-          <h3 class="font-medium">Quick Actions</h3>
+        <div class="space-y-4">
+          <h3 class="font-semibold text-secondary-100 mb-3">Quick Actions</h3>
           
           <!-- Log Set Form -->
-          <div class="border rounded-md p-3">
-            <h4 class="font-medium mb-2">Log Workout Set</h4>
-            <div class="grid grid-cols-3 gap-2 mb-2">
-              <input type="text" id="exercise" placeholder="Exercise" class="px-2 py-1 border rounded text-sm">
-              <input type="number" id="weight" placeholder="Weight" class="px-2 py-1 border rounded text-sm">
-              <input type="number" id="reps" placeholder="Reps" class="px-2 py-1 border rounded text-sm">
+          <div class="border-2 border-success-800 rounded-xl p-4 bg-success-900/20">
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 bg-success-500 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+              </div>
+              <h4 class="font-semibold text-success-300">Log Workout Set</h4>
             </div>
-            <button onclick="logSet()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
+            <div class="grid grid-cols-3 gap-3 mb-3">
+              <input type="text" id="exercise" placeholder="Exercise" class="form-input text-sm">
+              <input type="number" id="weight" placeholder="Weight" class="form-input text-sm">
+              <input type="number" id="reps" placeholder="Reps" class="form-input text-sm">
+            </div>
+            <button onclick="logSet()" class="btn-success text-sm">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
               Log Set
             </button>
           </div>
 
           <!-- Get Last Set -->
-          <div class="border rounded-md p-3">
-            <h4 class="font-medium mb-2">Get Last Set</h4>
+          <div class="border-2 border-primary-800 rounded-xl p-4 bg-primary-900/20">
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+              <h4 class="font-semibold text-primary-300">Get Last Set</h4>
+            </div>
             <div class="flex gap-2">
-              <input type="text" id="get-exercise" placeholder="Exercise name" class="flex-1 px-2 py-1 border rounded text-sm">
-              <button onclick="getLastSet()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+              <input type="text" id="get-exercise" placeholder="Exercise name" class="form-input text-sm flex-1">
+              <button onclick="getLastSet()" class="btn-primary text-sm">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
                 Get Last Set
               </button>
             </div>
           </div>
 
           <!-- Get Last N Sets -->
-          <div class="border rounded-md p-3">
-            <h4 class="font-medium mb-2">Get Last N Sets</h4>
+          <div class="border-2 border-warning-800 rounded-xl p-4 bg-warning-900/20">
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 bg-warning-500 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+              </div>
+              <h4 class="font-semibold text-warning-300">Get Last N Sets</h4>
+            </div>
             <div class="flex gap-2">
-              <input type="text" id="get-sets-exercise" placeholder="Exercise" class="flex-1 px-2 py-1 border rounded text-sm">
-              <input type="number" id="sets-limit" placeholder="Limit" value="5" class="w-16 px-2 py-1 border rounded text-sm">
-              <button onclick="getLastSets()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+              <input type="text" id="get-sets-exercise" placeholder="Exercise" class="form-input text-sm flex-1">
+              <input type="number" id="sets-limit" placeholder="Limit" value="5" class="form-input text-sm w-20">
+              <button onclick="getLastSets()" class="btn-warning text-sm">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
                 Get Sets
               </button>
             </div>
           </div>
 
           <!-- Get Recent Sets (All Exercises) -->
-          <div class="border rounded-md p-3">
-            <h4 class="font-medium mb-2">Get Recent Sets (All Exercises)</h4>
+          <div class="border-2 border-accent-800 rounded-xl p-4 bg-accent-900/20">
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 bg-accent-500 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <h4 class="font-semibold text-accent-300">Get Recent Sets (All Exercises)</h4>
+            </div>
             <div class="flex gap-2">
-              <input type="number" id="recent-sets-limit" placeholder="Limit" value="10" class="w-16 px-2 py-1 border rounded text-sm">
-              <button onclick="getRecentSets()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm" style="background-color: #7c3aed !important; color: white !important; display: block !important; visibility: visible !important; opacity: 1 !important;">
+              <input type="number" id="recent-sets-limit" placeholder="Limit" value="10" class="form-input text-sm w-20">
+              <button onclick="getRecentSets()" class="btn-primary text-sm bg-accent-600 hover:bg-accent-700">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
                 Get Recent Sets
               </button>
             </div>
@@ -128,47 +229,118 @@
 
       <!-- Results Panel -->
       <div>
-        <h3 class="font-medium mb-2">API Response</h3>
-        <div id="api-results" class="bg-gray-100 p-4 rounded-md min-h-96 overflow-auto">
-          <p class="text-gray-500">API responses will appear here...</p>
+        <h3 class="font-semibold text-secondary-100 mb-3">API Response</h3>
+        <div id="api-results" class="bg-secondary-800 border-2 border-secondary-700 rounded-xl p-4 min-h-96 overflow-auto">
+          <div class="flex items-center justify-center h-full text-secondary-400">
+            <div class="text-center">
+              <svg class="w-16 h-16 mx-auto mb-4 text-secondary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <p class="text-sm font-medium">API responses will appear here</p>
+              <p class="text-xs text-secondary-500 mt-1">Test an endpoint to see the response</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Recent Activity -->
-  <div class="grid lg:grid-cols-2 gap-8">
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-semibold mb-4">Recent Sets</h2>
+<!-- Recent Activity -->
+<div class="grid lg:grid-cols-2 gap-8">
+  <div class="card shadow-medium">
+    <div class="card-header">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-secondary-100">Recent Sets</h2>
+        <div class="badge badge-primary"><%= @recent_sets.count %> sets</div>
+      </div>
+    </div>
+    <div class="card-body">
       <% if @recent_sets.any? %>
-        <div class="space-y-2">
+        <div class="space-y-3">
           <% @recent_sets.each do |set| %>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span><%= set.exercise.titleize %></span>
-              <span class="text-sm text-gray-600"><%= set.reps %> reps @ <%= set.weight %> lbs</span>
+            <div class="list-item bg-secondary-800 rounded-xl border border-secondary-700">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-gradient-to-r from-success-500 to-success-600 rounded-xl flex items-center justify-center mr-3">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <span class="font-medium text-secondary-100"><%= set.exercise.titleize %></span>
+                  <div class="text-sm text-secondary-400 mt-1">
+                    <span class="inline-flex items-center">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <%= time_ago_in_words(set.created_at) %> ago
+                    </span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="badge badge-success"><%= set.reps %> reps</div>
+                  <div class="text-sm text-secondary-400 mt-1"><%= set.weight %> lbs</div>
+                </div>
+              </div>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p class="text-gray-500">No sets logged yet.</p>
+        <div class="text-center py-12">
+          <svg class="w-16 h-16 text-secondary-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          <h3 class="text-lg font-medium text-secondary-100 mb-2">No sets logged yet</h3>
+          <p class="text-secondary-400 mb-4">Start logging your workouts to see your progress here</p>
+        </div>
       <% end %>
     </div>
+  </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-semibold mb-4">Workout Assignments</h2>
+  <div class="card shadow-medium">
+    <div class="card-header">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-secondary-100">Workout Assignments</h2>
+        <div class="badge badge-primary"><%= @workout_assignments.count %> assignments</div>
+      </div>
+    </div>
+    <div class="card-body">
       <% if @workout_assignments.any? %>
-        <div class="space-y-2">
+        <div class="space-y-3">
           <% @workout_assignments.each do |assignment| %>
-            <div class="p-2 bg-gray-50 rounded">
-              <span class="font-medium"><%= assignment.assignment_name %></span>
-              <% if assignment.scheduled_for %>
-                <span class="text-sm text-gray-600 block">Scheduled: <%= assignment.scheduled_for.strftime('%Y-%m-%d %H:%M') %></span>
-              <% end %>
+            <div class="list-item bg-secondary-800 rounded-xl border border-secondary-700">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-gradient-to-r from-accent-500 to-accent-600 rounded-xl flex items-center justify-center mr-3">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <span class="font-medium text-secondary-100"><%= assignment.assignment_name %></span>
+                  <% if assignment.scheduled_for %>
+                    <div class="text-sm text-secondary-400 mt-1">
+                      <span class="inline-flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <%= assignment.scheduled_for.strftime('%B %d, %Y at %I:%M %p') %>
+                      </span>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="badge badge-warning">Scheduled</div>
+              </div>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p class="text-gray-500">No workout assignments yet.</p>
+        <div class="text-center py-12">
+          <svg class="w-16 h-16 text-secondary-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <h3 class="text-lg font-medium text-secondary-100 mb-2">No workout assignments yet</h3>
+          <p class="text-secondary-400 mb-4">Create workout plans and assignments to track your progress</p>
+        </div>
       <% end %>
     </div>
   </div>

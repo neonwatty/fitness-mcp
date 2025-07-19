@@ -78,15 +78,15 @@ class UserStatsResource < FastMcp::Resource
   end
   
   def calculate_exercise_stats(sets)
-    sets.group(:exercise).group_by(&:exercise).map do |exercise, exercise_sets|
+    sets.group_by(&:exercise).map do |exercise, exercise_sets|
       {
         exercise: exercise,
         total_sets: exercise_sets.count,
         total_reps: exercise_sets.sum(&:reps),
-        total_weight: exercise_sets.sum { |s| s.weight * s.reps },
-        max_weight: exercise_sets.maximum(&:weight),
-        average_weight: exercise_sets.average(&:weight)&.round(2),
-        last_performed: exercise_sets.maximum(&:timestamp)&.iso8601
+        total_weight: exercise_sets.sum { |s| s.weight.to_f * s.reps },
+        max_weight: exercise_sets.map(&:weight).map(&:to_f).max,
+        average_weight: (exercise_sets.map(&:weight).map(&:to_f).sum / exercise_sets.count).round(2),
+        last_performed: exercise_sets.map(&:timestamp).max&.iso8601
       }
     end
   end
@@ -103,12 +103,17 @@ class UserStatsResource < FastMcp::Resource
       first_set = exercise_sets.order(:timestamp).first
       last_set = exercise_sets.order(:timestamp).last
       
+      first_weight = first_set.weight.to_f
+      last_weight = last_set.weight.to_f
+      improvement = last_weight - first_weight
+      improvement_percentage = first_weight > 0 ? ((improvement / first_weight) * 100).round(2) : 0
+      
       {
         exercise: exercise,
-        first_weight: first_set.weight,
-        last_weight: last_set.weight,
-        improvement: last_set.weight - first_set.weight,
-        improvement_percentage: ((last_set.weight - first_set.weight) / first_set.weight * 100).round(2),
+        first_weight: first_weight,
+        last_weight: last_weight,
+        improvement: improvement,
+        improvement_percentage: improvement_percentage,
         sets_performed: exercise_sets.count
       }
     end.compact

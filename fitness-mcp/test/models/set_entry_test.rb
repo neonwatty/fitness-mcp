@@ -65,7 +65,7 @@ class SetEntryTest < ActiveSupport::TestCase
       timestamp: Time.current
     )
     assert_not set_entry.valid?
-    assert_includes set_entry.errors[:weight], "must be greater than 0"
+    assert_includes set_entry.errors[:weight], "must be greater than or equal to 0"
   end
 
   test "should require positive reps" do

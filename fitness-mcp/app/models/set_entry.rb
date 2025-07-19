@@ -3,7 +3,7 @@ class SetEntry < ApplicationRecord
   
   validates :exercise, presence: true
   validates :reps, presence: true, numericality: { greater_than: 0 }
-  validates :weight, presence: true, numericality: { greater_than: 0 }
+  validates :weight, presence: true, numericality: { greater_than_or_equal_to: 0 }
   
   scope :for_exercise, ->(exercise) { where(exercise: exercise) }
   scope :recent, -> { order(timestamp: :desc) }

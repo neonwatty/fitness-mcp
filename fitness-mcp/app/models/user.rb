@@ -7,4 +7,8 @@ class User < ApplicationRecord
   has_many :mcp_audit_logs, dependent: :destroy
   
   validates :email, presence: true, uniqueness: true
+  
+  def admin?
+    false # For now, no admin users - can be enhanced later
+  end
 end

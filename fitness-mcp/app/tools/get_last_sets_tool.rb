@@ -10,7 +10,7 @@ class GetLastSetsTool < ApplicationTool
     # authenticate_user! is already called by ApplicationTool#call
     
     # Validate limit parameter
-    limit = [[limit, 1].max, 20].min
+    limit = [[limit.to_i, 1].max, 20].min
     
     normalized_exercise = exercise.strip.downcase
     sets = current_user.set_entries

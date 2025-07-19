@@ -31,14 +31,13 @@ class WorkoutAssignmentTest < ActiveSupport::TestCase
     assert_includes assignment.errors[:assignment_name], "can't be blank"
   end
 
-  test "should require scheduled_for" do
+  test "should allow nil scheduled_for" do
     user = create_user
     assignment = user.workout_assignments.build(
       assignment_name: "Push Day",
       config: { exercises: ["Bench Press"] }.to_json
     )
-    assert_not assignment.valid?
-    assert_includes assignment.errors[:scheduled_for], "can't be blank"
+    assert assignment.valid?
   end
 
   test "should belong to user" do

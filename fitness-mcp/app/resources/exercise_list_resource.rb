@@ -5,14 +5,20 @@ class ExerciseListResource < FastMcp::Resource
   mime_type "application/json"
   
   def content
+    # Authenticate user
+    unless current_user
+      raise StandardError, "Authentication required to access exercise list"
+    end
+    
     # Get all unique exercises from the database
     exercises = SetEntry.all.group_by(&:exercise).map do |exercise, sets|
+      weights = sets.map { |s| s.weight.to_f }
       {
         name: exercise,
         total_sets: sets.count,
         total_users: sets.map(&:user_id).uniq.count,
-        average_weight: sets.map(&:weight).sum.to_f / sets.count,
-        max_weight: sets.map(&:weight).max,
+        average_weight: (weights.sum / sets.count).round(2),
+        max_weight: weights.max,
         last_performed: sets.map(&:timestamp).max&.iso8601,
         popularity_rank: nil # Will be calculated below
       }
@@ -28,5 +34,16 @@ class ExerciseListResource < FastMcp::Resource
     }
     
     JSON.pretty_generate(exercise_data)
+  end
+  
+  private
+  
+  def current_user
+    api_key = ENV['API_KEY']
+    return nil unless api_key
+    
+    key_hash = ApiKey.hash_key(api_key)
+    api_key_record = ApiKey.active.find_by(api_key_hash: key_hash)
+    api_key_record&.user
   end
 end

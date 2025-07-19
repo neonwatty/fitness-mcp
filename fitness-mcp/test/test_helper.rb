@@ -1,4 +1,26 @@
 ENV["RAILS_ENV"] ||= "test"
+
+# Configure SimpleCov for code coverage
+require 'simplecov'
+SimpleCov.start 'rails' do
+  add_filter '/test/'
+  add_filter '/config/'
+  add_filter '/vendor/'
+  
+  # Set minimum coverage threshold
+  minimum_coverage 95
+  
+  # Group files for better organization
+  add_group 'Controllers', 'app/controllers'
+  add_group 'Models', 'app/models'
+  add_group 'Tools', 'app/tools'
+  add_group 'Resources', 'app/resources'
+  add_group 'Helpers', 'app/helpers'
+  add_group 'Mailers', 'app/mailers'
+  add_group 'Channels', 'app/channels'
+  add_group 'Jobs', 'app/jobs'
+end
+
 require_relative "../config/environment"
 require "rails/test_help"
 
@@ -59,6 +81,16 @@ module ActionDispatch
 
     def api_headers(api_key)
       { 'Authorization' => "Bearer #{api_key}" }
+    end
+    
+    def create_user_with_api_key(email: 'test@example.com', password: 'password123')
+      user = create_user(email: email, password: password)
+      api_key_record, key = create_api_key(user: user)
+      # Store the key value as an instance variable for tests to access
+      api_key = user.api_keys.first
+      api_key.instance_variable_set(:@key, key)
+      api_key.define_singleton_method(:key) { @key }
+      user
     end
   end
 end

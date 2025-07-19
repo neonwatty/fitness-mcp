@@ -4,7 +4,8 @@ class GetLastSetToolTest < ActiveSupport::TestCase
   def setup
     @user = create_user
     @api_key_record, @api_key = create_api_key(user: @user)
-    @tool = GetLastSetTool.new(api_key: @api_key)
+    @tool = GetLastSetTool.new
+    @tool.instance_variable_set(:@api_key, @api_key)
   end
 
   test "should get last set for specific exercise" do
@@ -32,11 +33,11 @@ class GetLastSetToolTest < ActiveSupport::TestCase
     
     assert result[:success]
     assert_includes result[:message], "Last Bench Press: 8 reps at 140.0 lbs"
-    assert_not_nil result[:set_entry]
-    assert_equal last_set.id, result[:set_entry][:id]
-    assert_equal "bench press", result[:set_entry][:exercise]
-    assert_equal 140.0, result[:set_entry][:weight]
-    assert_equal 8, result[:set_entry][:reps]
+    assert_not_nil result[:last_set]
+    assert_equal last_set.id, result[:last_set][:id]
+    assert_equal "bench press", result[:last_set][:exercise]
+    assert_equal 140.0, result[:last_set][:weight]
+    assert_equal 8, result[:last_set][:reps]
   end
 
   test "should return message when no sets exist for exercise" do
@@ -44,7 +45,7 @@ class GetLastSetToolTest < ActiveSupport::TestCase
     
     assert_not result[:success]
     assert_equal "No sets found for Deadlift", result[:message]
-    assert_nil result[:set_entry]
+    assert_nil result[:last_set]
   end
 
   test "should normalize exercise names" do
@@ -58,22 +59,22 @@ class GetLastSetToolTest < ActiveSupport::TestCase
     result = @tool.call(exercise: "  BENCH PRESS  ")
     
     assert result[:success]
-    assert_not_nil result[:set_entry]
+    assert_not_nil result[:last_set]
   end
 
   test "should require authentication" do
-    unauthenticated_tool = GetLastSetTool.new(api_key: nil)
+    @tool.instance_variable_set(:@api_key, nil)
     
     assert_raises StandardError, "Authentication required. Please provide a valid API key." do
-      unauthenticated_tool.call(exercise: "Bench Press")
+      @tool.call(exercise: "Bench Press")
     end
   end
 
   test "should require valid API key" do
-    invalid_tool = GetLastSetTool.new(api_key: "invalid_key")
+    @tool.instance_variable_set(:@api_key, "invalid_key")
     
     assert_raises StandardError, "Authentication required. Please provide a valid API key." do
-      invalid_tool.call(exercise: "Bench Press")
+      @tool.call(exercise: "Bench Press")
     end
   end
 

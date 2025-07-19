@@ -25,8 +25,8 @@ if ARGV[0] == 'stdio'
   # Redirect STDERR to suppress fast_mcp logs
   $stderr.reopen('/dev/null', 'w')
   
-  # Monkey patch MCP::Logger to suppress all output
-  module MCP
+  # Monkey patch FastMcp::Logger to suppress all output
+  module FastMcp
     class Logger
       def initialize(*args); end
       def info(*args); end
@@ -74,8 +74,13 @@ require_relative 'app/tools/get_recent_sets_tool'
 require_relative 'app/tools/delete_last_set_tool'
 require_relative 'app/tools/assign_workout_tool'
 
+# Load resource files
+require_relative 'app/resources/user_stats_resource'
+require_relative 'app/resources/workout_history_resource'
+require_relative 'app/resources/exercise_list_resource'
+
 # Create MCP server
-server = MCP::Server.new(
+server = FastMcp::Server.new(
   name: 'fitness-mcp',
   version: '1.0.0'
 )
@@ -83,6 +88,11 @@ server = MCP::Server.new(
 # Register all fitness tools
 [LogSetTool, GetLastSetTool, GetLastSetsTool, GetRecentSetsTool, DeleteLastSetTool, AssignWorkoutTool].each do |tool_class|
   server.register_tool(tool_class)
+end
+
+# Register all fitness resources
+[UserStatsResource, WorkoutHistoryResource, ExerciseListResource].each do |resource_class|
+  server.register_resource(resource_class)
 end
 
 # Start server based on arguments
