@@ -50,6 +50,10 @@ Rails.application.routes.draw do
   delete "/logout", to: "web_sessions#destroy"
   get "/dashboard", to: "home#dashboard"
   
+  # OAuth routes
+  get '/auth/:provider/callback', to: 'omniauth_callbacks#google_oauth2'
+  get '/auth/failure', to: 'omniauth_callbacks#failure'
+  
   # Web API key management
   resources :api_keys, only: [:create, :destroy] do
     member do

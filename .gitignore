@@ -6,6 +6,7 @@ fitness-mcp/tmp/*
 __pycache__/
 *.py[cod]
 *$py.class
+*.env
 
 # C extensions
 *.so

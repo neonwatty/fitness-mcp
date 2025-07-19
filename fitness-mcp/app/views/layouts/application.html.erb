@@ -36,7 +36,7 @@
               </div>
               <%= link_to "Dashboard", dashboard_path, class: "nav-link #{'nav-link-active' if request.path == dashboard_path}" %>
               <%= link_to "API Docs", api_info_path, class: "nav-link #{'nav-link-active' if request.path == api_info_path}" %>
-              <%= link_to logout_path, method: :delete, class: "btn-secondary ml-2" do %>
+              <%= link_to logout_path, method: :delete, class: "btn-secondary ml-2", data: { turbo_method: :delete } do %>
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                 </svg>
@@ -78,7 +78,7 @@
             </div>
             <%= link_to "Dashboard", dashboard_path, class: "block px-3 py-2 text-base font-medium text-secondary-300 hover:text-primary-400 hover:bg-secondary-800 rounded-xl" %>
             <%= link_to "API Docs", api_info_path, class: "block px-3 py-2 text-base font-medium text-secondary-300 hover:text-primary-400 hover:bg-secondary-800 rounded-xl" %>
-            <%= link_to "Logout", logout_path, method: :delete, class: "block px-3 py-2 text-base font-medium text-error-400 hover:text-error-300 hover:bg-error-900/20 rounded-xl" %>
+            <%= link_to "Logout", logout_path, method: :delete, class: "block px-3 py-2 text-base font-medium text-error-400 hover:text-error-300 hover:bg-error-900/20 rounded-xl", data: { turbo_method: :delete } %>
           <% else %>
             <%= link_to "API Docs", api_info_path, class: "block px-3 py-2 text-base font-medium text-secondary-300 hover:text-primary-400 hover:bg-secondary-800 rounded-xl" %>
             <%= link_to "Login", login_path, class: "block px-3 py-2 text-base font-medium text-secondary-300 hover:text-primary-400 hover:bg-secondary-800 rounded-xl" %>
