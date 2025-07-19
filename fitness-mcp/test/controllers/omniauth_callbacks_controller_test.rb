@@ -64,7 +64,39 @@ class OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
     
     get '/auth/google_oauth2/callback'
     
+    # OmniAuth redirects to /auth/failure on error
+    assert_redirected_to '/auth/failure?message=invalid_credentials&strategy=google_oauth2'
+  end
+  
+  test "handles user creation failure during oauth" do
+    # Mock auth hash with invalid data that will fail validation
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
+      provider: 'google_oauth2',
+      uid: '123456',
+      info: {
+        email: nil,  # Missing email will cause validation failure
+        name: 'Test User',
+        image: 'https://example.com/image.jpg'
+      }
+    })
+    
+    get '/auth/google_oauth2/callback'
+    
     assert_redirected_to login_path
-    assert_match /Authentication failed/, flash[:alert]
+    assert_equal 'Authentication failed. Please try again.', flash[:alert]
+  end
+  
+  test "handles exceptions during oauth callback" do
+    # Create auth hash that will trigger an error
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
+      provider: 'google_oauth2',
+      uid: '123456',
+      info: nil  # This will cause an error when accessing info.email
+    })
+    
+    get '/auth/google_oauth2/callback'
+    
+    assert_redirected_to login_path
+    assert_equal 'Authentication failed. Please try again.', flash[:alert]
   end
 end

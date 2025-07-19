@@ -82,4 +82,34 @@ class UserOauthTest < ActiveSupport::TestCase
     assert_not user.valid?
     assert user.errors[:password].present?
   end
+  
+  test "has_password? returns true for users with password_digest" do
+    # Test regular user with password
+    user_with_password = users(:one)
+    assert user_with_password.has_password?
+    
+    # Test OAuth user without password_digest
+    oauth_user = User.new(
+      email: 'oauth@example.com',
+      provider: 'google_oauth2',
+      uid: '123456',
+      password_digest: nil
+    )
+    assert_not oauth_user.has_password?
+  end
+  
+  test "password_required? with various user states" do
+    # OAuth user without password
+    oauth_user = User.new(provider: 'google_oauth2', uid: '123')
+    oauth_user.password = nil
+    assert_not oauth_user.send(:password_required?)
+    
+    # OAuth user trying to set password
+    oauth_user.password = 'newpassword123'
+    assert oauth_user.send(:password_required?)
+    
+    # Regular user
+    regular_user = User.new(provider: nil)
+    assert regular_user.send(:password_required?)
+  end
 end

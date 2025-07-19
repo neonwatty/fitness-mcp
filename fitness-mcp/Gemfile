@@ -21,6 +21,9 @@ gem "omniauth", "~> 2.1"
 gem "omniauth-google-oauth2", "~> 1.1"
 gem "omniauth-rails_csrf_protection", "~> 1.0"
 
+# Environment variables
+gem "dotenv-rails", groups: [:development, :test]
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ x64_mingw mingw mswin jruby ]
 
