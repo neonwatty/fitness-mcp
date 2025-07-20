@@ -34,7 +34,22 @@ This guide explains how to set up Google OAuth authentication for the Fitness MC
 
 ## Rails Application Configuration
 
-### 1. Update Rails Credentials
+You can configure Google OAuth credentials using either environment variables or Rails credentials.
+
+### Option 1: Environment Variables (Recommended for Development)
+
+1. Create a `.env` file in your Rails root directory:
+
+```bash
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+```
+
+2. The `dotenv-rails` gem will automatically load these in development and test environments.
+
+3. For production, set these as actual environment variables in your deployment platform.
+
+### Option 2: Rails Credentials
 
 Edit your Rails credentials:
 
@@ -50,17 +65,7 @@ google:
   client_secret: YOUR_GOOGLE_CLIENT_SECRET
 ```
 
-### 2. Environment-Specific Configuration
-
-For different environments, you can use environment-specific credentials:
-
-```bash
-# Development
-EDITOR="code --wait" bin/rails credentials:edit --environment development
-
-# Production
-EDITOR="code --wait" bin/rails credentials:edit --environment production
-```
+**Note**: The application is configured to use environment variables by default. To use Rails credentials instead, update `config/initializers/omniauth.rb`.
 
 ## Features Implemented
 
@@ -131,22 +136,14 @@ bin/rails test test/controllers/omniauth_callbacks_controller_test.rb
 - Use HTTPS for all OAuth callbacks
 - Set production credentials in Rails
 
-### 2. Environment Variables (Alternative)
+### 2. Production Environment Variables
 
-Instead of Rails credentials, you can use environment variables:
+For production deployment, set the environment variables directly in your hosting platform:
 
-```ruby
-# config/initializers/omniauth.rb
-Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :google_oauth2,
-           ENV['GOOGLE_CLIENT_ID'],
-           ENV['GOOGLE_CLIENT_SECRET'],
-           {
-             scope: 'email,profile',
-             prompt: 'select_account'
-           }
-end
-```
+- **Heroku**: `heroku config:set GOOGLE_CLIENT_ID=xxx GOOGLE_CLIENT_SECRET=yyy`
+- **AWS**: Use Parameter Store or Secrets Manager
+- **Docker**: Pass via docker-compose.yml or runtime flags
+- **Traditional Server**: Add to `/etc/environment` or systemd service files
 
 ### 3. Session Security
 

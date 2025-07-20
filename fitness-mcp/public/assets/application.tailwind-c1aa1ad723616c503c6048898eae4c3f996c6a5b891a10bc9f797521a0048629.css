@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-secondary-900 text-secondary-100;
+  }
+}
+
+@layer components {
+  /* Button Components */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 ease-in-out border-0 rounded-xl;
+    @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply shadow-soft hover:shadow-medium active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-secondary-200 transition-all duration-200 ease-in-out border border-secondary-600 rounded-xl;
+    @apply bg-secondary-800 hover:bg-secondary-700 hover:border-secondary-500;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-secondary-900;
+    @apply shadow-soft-dark hover:shadow-medium-dark active:scale-95;
+  }
+
+  .btn-success {
+    @apply inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 ease-in-out border-0 rounded-xl;
+    @apply bg-gradient-to-r from-success-600 to-success-700 hover:from-success-700 hover:to-success-800;
+    @apply focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2;
+    @apply shadow-soft hover:shadow-medium active:scale-95;
+  }
+
+  .btn-warning {
+    @apply inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 ease-in-out border-0 rounded-xl;
+    @apply bg-gradient-to-r from-warning-600 to-warning-700 hover:from-warning-700 hover:to-warning-800;
+    @apply focus:outline-none focus:ring-2 focus:ring-warning-500 focus:ring-offset-2;
+    @apply shadow-soft hover:shadow-medium active:scale-95;
+  }
+
+  .btn-error {
+    @apply inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 ease-in-out border-0 rounded-xl;
+    @apply bg-gradient-to-r from-error-600 to-error-700 hover:from-error-700 hover:to-error-800;
+    @apply focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2;
+    @apply shadow-soft hover:shadow-medium active:scale-95;
+  }
+
+  /* Card Components */
+  .card {
+    @apply bg-secondary-800 rounded-2xl shadow-soft-dark border border-secondary-700 overflow-hidden;
+    @apply transition-all duration-200 hover:shadow-medium-dark;
+  }
+
+  .card-header {
+    @apply px-6 py-4 bg-gradient-to-r from-secondary-900 to-secondary-800 border-b border-secondary-700;
+  }
+
+  .card-body {
+    @apply px-6 py-4;
+  }
+
+  .card-footer {
+    @apply px-6 py-4 bg-secondary-900 border-t border-secondary-700;
+  }
+
+  /* Form Components */
+  .form-input {
+    @apply block w-full px-4 py-3 text-sm text-secondary-100 placeholder-secondary-400 transition-all duration-200 ease-in-out border border-secondary-600 rounded-xl;
+    @apply bg-secondary-900 focus:bg-secondary-800 focus:border-primary-500 focus:ring-2 focus:ring-primary-500 focus:ring-offset-0;
+    @apply shadow-soft-dark focus:shadow-medium-dark;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-secondary-200 mb-2;
+  }
+
+  .form-error {
+    @apply mt-2 text-sm text-error-400;
+  }
+
+  .form-help {
+    @apply mt-2 text-sm text-secondary-400;
+  }
+
+  /* Alert Components */
+  .alert {
+    @apply px-4 py-3 rounded-xl border-l-4 shadow-soft animate-fade-in;
+  }
+
+  .alert-success {
+    @apply bg-success-900/20 border-success-500 text-success-300;
+  }
+
+  .alert-error {
+    @apply bg-error-900/20 border-error-500 text-error-300;
+  }
+
+  .alert-warning {
+    @apply bg-warning-900/20 border-warning-500 text-warning-300;
+  }
+
+  .alert-info {
+    @apply bg-primary-900/20 border-primary-500 text-primary-300;
+  }
+
+  /* Navigation Components */
+  .nav-link {
+    @apply px-4 py-2 text-sm font-medium text-secondary-300 transition-all duration-200 ease-in-out rounded-xl;
+    @apply hover:text-primary-400 hover:bg-secondary-700 focus:outline-none focus:text-primary-400 focus:bg-secondary-700;
+  }
+
+  .nav-link-active {
+    @apply bg-secondary-700 text-primary-400 font-semibold;
+  }
+
+  /* Badge Components */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 text-xs font-medium rounded-full;
+  }
+
+  .badge-primary {
+    @apply bg-primary-900/30 text-primary-300 border border-primary-800;
+  }
+
+  .badge-success {
+    @apply bg-success-900/30 text-success-300 border border-success-800;
+  }
+
+  .badge-warning {
+    @apply bg-warning-900/30 text-warning-300 border border-warning-800;
+  }
+
+  .badge-error {
+    @apply bg-error-900/30 text-error-300 border border-error-800;
+  }
+
+  /* List Components */
+  .list-item {
+    @apply flex items-center justify-between px-4 py-3 transition-all duration-200 ease-in-out border-b border-secondary-700 last:border-b-0;
+    @apply hover:bg-secondary-800 focus:bg-secondary-800 focus:outline-none;
+  }
+
+  /* Progress Components */
+  .progress-bar {
+    @apply w-full bg-secondary-700 rounded-full h-2 overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full bg-gradient-to-r from-primary-500 to-primary-600 transition-all duration-500 ease-in-out;
+  }
+
+  /* Utility Classes */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent;
+  }
+
+  .bg-gradient-primary {
+    @apply bg-gradient-to-r from-primary-600 to-primary-700;
+  }
+
+  .bg-gradient-secondary {
+    @apply bg-gradient-to-r from-secondary-600 to-secondary-700;
+  }
+
+  .bg-gradient-success {
+    @apply bg-gradient-to-r from-success-600 to-success-700;
+  }
+
+  .shadow-glow {
+    @apply shadow-lg;
+    box-shadow: 0 10px 40px -10px rgba(14, 165, 233, 0.15), 0 2px 4px -2px rgba(14, 165, 233, 0.06);
+  }
+
+  .glass-effect {
+    @apply bg-secondary-900/80 backdrop-blur-sm border border-secondary-700/50;
+  }
+}

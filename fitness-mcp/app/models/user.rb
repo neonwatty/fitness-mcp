@@ -8,6 +8,7 @@ class User < ApplicationRecord
   
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true, length: { minimum: 6 }, if: :password_required?
+  validates :password, confirmation: true, if: :password_required?
   
   def self.from_omniauth(auth)
     user = find_by(email: auth.info.email)

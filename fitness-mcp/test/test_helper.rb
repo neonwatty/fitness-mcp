@@ -33,7 +33,11 @@ module ActiveSupport
     fixtures :all
 
     # Helper methods for tests
-    def create_user(email: 'test@example.com', password: 'password123')
+    def create_user(email: nil, password: 'password123')
+      # Generate unique email if none provided or if the default test email is used
+      if email.nil? || email == 'test@example.com'
+        email = "test#{SecureRandom.hex(4)}@example.com"
+      end
       User.create!(
         email: email,
         password: password,
@@ -61,7 +65,11 @@ module ActionDispatch
   class IntegrationTest
     include ActiveSupport::TestCase::InstanceMethods if defined?(ActiveSupport::TestCase::InstanceMethods)
     
-    def create_user(email: 'test@example.com', password: 'password123')
+    def create_user(email: nil, password: 'password123')
+      # Generate unique email if none provided or if the default test email is used
+      if email.nil? || email == 'test@example.com'
+        email = "test#{SecureRandom.hex(4)}@example.com"
+      end
       User.create!(
         email: email,
         password: password,
