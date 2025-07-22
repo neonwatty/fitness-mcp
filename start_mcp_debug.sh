@@ -1,4 +1,4 @@
-#\!/bin/bash
+#!/bin/bash
 # Start the Fitness MCP Server with debugging
 
 echo "🏋️  Starting Fitness MCP Server (Debug Mode)"
